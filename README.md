@@ -8,7 +8,6 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Standard: C23](https://img.shields.io/badge/standard-C23-purple.svg)](https://en.wikipedia.org/wiki/C23_(C_standard_revision))
-[![Safety: Enforced](https://img.shields.io/badge/safety-enforced-red.svg)](include/camelot.h)
 [![Build: Make](https://img.shields.io/badge/build-makefile-green.svg)](Makefile)
 
 [**Philosophy**](#-philosophy) • [**The Barrier**](#-the-barrier) • [**Quick Start**](#-getting-started) • [**Internals**](#-project-structure)
