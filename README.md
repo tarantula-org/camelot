@@ -10,7 +10,7 @@
 [![Standard: C23](https://img.shields.io/badge/standard-C23-purple.svg)](https://en.wikipedia.org/wiki/C23_(C_standard_revision))
 [![Build: Make](https://img.shields.io/badge/build-makefile-green.svg)](Makefile)
 
-[**Philosophy**](#-philosophy) • [**The Barrier**](#-the-barrier) • [**Quick Start**](#-getting-started) • [**Internals**](#-project-structure)
+[**Philosophy**](#-philosophy) • [**Features**](#-features) • [**Quick Start**](#-getting-started) • [**Internals**](#-project-structure)
 
 </div>
 
@@ -31,16 +31,18 @@ This framework enforces modern engineering practices on top of C. It "poisons" l
 
 ---
 
-## 🛡️ The Barrier
+## 🛡️ Features
 
-Camelot uses GCC preprocessor directives to **physically prevent** unsafe code from compiling.
+Camelot enforces modern engineering practices through a combination of compile-time restrictions and runtime helpers.
 
 | Feature | Description | Status |
 | :--- | :--- | :--- |
-| **Poison Barrier** 🚫 | Blocks `malloc`, `free`, `scanf`, `gets`, `strcpy`. | 🟢 Active |
-| **Linear Arena** 🧠 | Region-based memory. Allocations are instant pointers bumps. | 🟢 Active |
+| **Poison Barrier** 🚫 | Blocks `malloc`, `free`, `scanf`, `gets`, `strcpy`. | 🟡 WIP |
+| **Linear Arena** 🧠 | Region-based memory. Allocations are instant pointers bumps. | 🟡 WIP |
 | **Auto-Cleanup** 🧹 | Uses `__attribute__((cleanup))` for scoped deallocation. | 🟡 WIP |
-| **Input Sanitizer** 📝 | Replaces `scanf` with buffered, type-safe readers. | 🟢 Active |
+| **Input Sanitizer** 📝 | Replaces `scanf` with buffered, type-safe readers. | 🟡 WIP |
+
+**Status:** 🟢 **Active** (Stable) • 🟡 **WIP** (Construction) • 🔴 **Planned**
 
 ---
 
