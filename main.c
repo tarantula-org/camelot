@@ -160,6 +160,125 @@ int main() {
         printf("    [FAIL] Pointer didn't move! We overwrote the next object!\n");
     }
 
+    // --- TEST 6: Dynamic List (The Entity System) ---
+    printf("\n[TEST 6] Testing Dynamic List (Vectors)...\n");
+    c_arena_reset(arena);
+
+    // 1. Define a Game Entity
+    typedef struct {
+        int id;
+        float x, y;
+    } Entity;
+
+    // 2. Initialize List
+    List entities;
+    c_list_init(arena, &entities, Entity, 2); // Start small (cap=2) to force resize
+    printf("    [INFO] Init Capacity: %zu\n", entities.capacity);
+
+    // 3. Spawn 5 Entities (Triggers resize 2->4->8)
+    printf("    [ACTION] Spawning 5 entities...\n");
+    for (int i = 0; i < 5; i++) {
+        // "Push" gives us a pointer to the new slot
+        Entity *e = c_list_push(arena, &entities, Entity);
+        if (e) {
+            e->id = i;
+            e->x = i * 10.0f;
+            e->y = i * -5.0f;
+        }
+    }
+
+    // 4. Verify Growth
+    if (entities.capacity >= 5) {
+        printf("    [PASS] List grew automatically. Cap: %zu\n", entities.capacity);
+    } else {
+        printf("    [FAIL] List did not grow!\n");
+    }
+
+    // 5. Read Back
+    printf("    [DATA] Entity 3 ID: %d (Expected 3)\n", c_list_at(&entities, Entity, 3).id);
+    
+    // ... inside main ...
+
+    // --- TEST 7: Safe Strings ---
+    printf("\n[TEST 7] Testing String System...\n");
+    c_arena_reset(arena);
+
+    // 1. Basic Wrapper
+    Str s1 = c_str("Hello");
+    printf("    [INFO] Wrapped String: '" STR_FMT "' (Len: %zu)\n", STR_ARG(s1), s1.len);
+
+    // 2. Formatting (The 'format!' equivalent)
+    int hp = 100;
+    const char *name = "PlayerOne";
+    
+    // We allocate this string directly into the arena!
+    Str status = c_str_fmt(arena, "[User: %s | HP: %d]", name, hp);
+    
+    printf("    [INFO] Formatted: '" STR_FMT "'\n", STR_ARG(status));
+
+    // 3. Equality Check
+    Str s2 = c_str("Hello");
+    if (c_str_eq(s1, s2)) {
+        printf("    [PASS] Equality check works ('Hello' == 'Hello')\n");
+    } else {
+        printf("    [FAIL] Equality check failed!\n");
+    }
+
+    // 4. Verify Memory Location
+    // Check if the formatted string actually lives inside our arena buffer
+    uintptr_t ptr_addr = (uintptr_t)status.ptr;
+    uintptr_t arena_start = (uintptr_t)arena->buffer;
+    uintptr_t arena_end = arena_start + arena->length;
+
+    if (ptr_addr >= arena_start && ptr_addr < arena_end) {
+        printf("    [PASS] String is safely stored inside the Fortress.\n");
+    } else {
+        printf("    [FAIL] String leaked to outside memory!\n");
+    }
+
+    // ... inside main ...
+
+    // --- TEST 8: Hash Table (Asset Map) ---
+    printf("\n[TEST 8] Testing Hash Table (Assets)...\n");
+    c_arena_reset(arena);
+
+    // 1. Init Table
+    Table assets;
+    c_table_init(arena, &assets, 4); // Start small to force resize
+    printf("    [INFO] Table Init Capacity: %zu\n", assets.capacity);
+
+    // 2. Insert Data
+    int tex_id_1 = 101;
+    int tex_id_2 = 202;
+    int tex_id_3 = 303;
+
+    c_table_put(arena, &assets, "hero.png", &tex_id_1);
+    c_table_put(arena, &assets, "enemy.png", &tex_id_2);
+    c_table_put(arena, &assets, "ground.png", &tex_id_3);
+
+    printf("    [ACTION] Inserted 3 assets.\n");
+
+    // 3. Lookup
+    int *val = (int *)c_table_get(&assets, "enemy.png");
+    if (val && *val == 202) {
+        printf("    [PASS] Found 'enemy.png' -> ID %d\n", *val);
+    } else {
+        printf("    [FAIL] Lookup failed or wrong value!\n");
+    }
+
+    // 4. Missing Key
+    if (c_table_get(&assets, "missing.png") == NULL) {
+        printf("    [PASS] Correctly returned NULL for missing key.\n");
+    }
+
+    // 5. Update Existing
+    int new_id = 999;
+    c_table_put(arena, &assets, "enemy.png", &new_id); // Overwrite
+    val = (int *)c_table_get(&assets, "enemy.png");
+    if (val && *val == 999) {
+        printf("    [PASS] Value updated correctly.\n");
+    }
+
     c_arena_destroy(arena);
     return 0;
 }
