@@ -71,7 +71,7 @@ gcc tests.c src/*.c -std=c2x -o run_tests
 
 ---
 
-##📂 Project StructureA clean, ISO-standard C structure designed for portability.
+## 📂 Project StructureA clean, ISO-standard C structure designed for portability.
 
 ```text
 Camelot/
@@ -89,10 +89,11 @@ Camelot/
 
 ---
 
-##📄 LicenseMIT — Use, fork, learn, experiment.
+## 📄 LicenseMIT — Use, fork, learn, experiment.
 
 See `LICENSE` for details.
 
-##🎨 Credits**Author:** Acrilic
+## 🎨 Credits**Author:** Acrilic
 
 **Logo:** [Solarus](https://www.flaticon.com/free-icon/cube_17533083)
+
