@@ -3,13 +3,13 @@
 <img src="logo.png" alt="Camelot Logo" width="200"/>
 
 # Camelot
-Re-Imagining C for modern engineering. A framework enforcing safety, ergonomics, and structural integrity for the C language.
+**Re-Imagining C for modern engineering.** A framework enforcing safety, ergonomics, and structural integrity for the C language.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Standard: C23](https://img.shields.io/badge/standard-C23-purple.svg)](https://en.wikipedia.org/wiki/C23_(C_standard_revision))
-[![Build: Make](https://img.shields.io/badge/build-makefile-green.svg)](Makefile)
+[![Documentation: GitBook](https://img.shields.io/badge/docs-GitBook-blue.svg)](https://camelot-1.gitbook.io/docs/)
 
-[**Philosophy**](#-philosophy) • [**Features**](#-features) • [**Quick Start**](#-getting-started) • [**Internals**](#-project-structure)
+[**Philosophy**](#-philosophy) • [**Quick Start**](#-getting-started) • [**Documentation**](#-documentation)
 
 </div>
 
@@ -19,70 +19,59 @@ Re-Imagining C for modern engineering. A framework enforcing safety, ergonomics,
 
 C is often dismissed as "legacy"—a dangerous relic destined to be replaced. **This view ignores reality.**
 
-The world's most critical infrastructure—from the **Linux Kernel** to **Git**, **Redis**, and **SQLite**—is built on C. It remains the gold standard for portability and stability. Experienced engineers don't hate C; they love it for its **honesty**. In C, there is no hidden garbage collector, no massive runtime, and no "magic" slowing you down. It is surprisingly ergonomic when stripped of its historical baggage.
+The world's most critical infrastructure—from the **Linux Kernel** to **Git**—is built on C. It remains the gold standard for portability. Experienced engineers don't hate C; they love it for its **honesty**.
 
-**The "pain" of C comes from the archaic patterns taught in academia.**
-Universities train us to manually `free()` every single allocation and wrestle with brittle `scanf` parsing. That isn't "systems programming"—that is just bad engineering. Real-world systems programmers use **Memory Arenas** to handle allocations instantly and **Data-Oriented patterns** to manage state.
-
-**Camelot brings this "Senior Engineer" workflow to the forefront.**
+**Camelot brings the "Senior Engineer" workflow to the forefront.**
 We strip away the friction of the 1989 standard library to reveal the high-performance, expressive language underneath.
 
-**The Goal:** Prove that C is the ultimate tool for modern engineering.
-- ❌ **Banned:** No manual `free()` drudgery. No `scanf` traps.
-- ✅ **Ergonomic:** Memory handling is O(1) and linear via Arenas (just like modern game engines).
-- ✅ **Transparent:** You control the machine, but the machine doesn't fight you.
+* ❌ **Banned:** No manual `free()` drudgery. No `scanf` traps.
+* ✅ **Ergonomic:** Memory handling is O(1) and linear via Arenas.
+* ✅ **Transparent:** You control the machine, but the machine doesn't fight you.
 
 -----
 
-## 🛡️ Features
+## 📚 Documentation
 
-Camelot enforces modern engineering practices through a combination of compile-time restrictions and runtime helpers.
+Detailed architecture, API references, and tutorials are available on our official documentation site:
 
-| Feature | Description | Status |
-| :--- | :--- | :--- |
-| **Poison Barrier** 🚫 | Blocks `malloc`, `free`, `scanf`, `gets`, `strcpy`. | 🟠 Experimental |
-| **Linear Arena** 🧠 | Region-based memory. Allocations are instant pointers bumps. | 🟠 Experimental |
-| **Auto-Cleanup** 🧹 | Uses `__attribute__((cleanup))` for scoped deallocation. | 🔴 Planned |
-| **Input Sanitizer** 📝 | Replaces `scanf` with buffered, type-safe readers. | 🔴 Planned |
-
-**Lifecycle:** 🔴 **Planned** (Roadmap) • 🟠 **Experimental** (API Unstable) • 🟡 **Preview** (Testing) • 🟢 **Stable** (Production Ready)
+👉 **[Read the Camelot Docs](https://camelot-1.gitbook.io/docs/)**
 
 -----
 
 ## 🚀 Getting Started
 
-Camelot is designed to be **dropped directly into your project**. No complex package managers required.
-
 ### Prerequisites
-* A C Compiler (GCC/Clang) supporting **C11** or higher.
+* A C Compiler (GCC/Clang) supporting **C11** or higher (C23 recommended).
 
 ### Integration
 
-1. **Download the Fortress:**
-   Clone this repository into a `lib/` folder inside your project.
-   ```bash
-   mkdir -p lib
-   git clone [https://github.com/AKRiLLiCK/camelot.git](https://github.com/AKRiLLiCK/camelot.git) lib/camelot
-   ```
+1.  **Clone the Repository:**
+    ```bash
+    git clone [https://github.com/AKRiLLiCK/camelot.git](https://github.com/AKRiLLiCK/camelot.git)
+    ```
 
-2. **Include the Interface:**
-   In your `main.c`, include the single public header.
-   ```c
-   // main.c
-   #include "lib/camelot/include/camelot.h"
-   ```
+2.  **Include the Fortress:**
+    In your code, simply include the single public header.
+    ```c
+    #include "camelot/include/camelot.h"
+    ```
 
-3. **Compile:**
-You must compile your code **along with** the Camelot implementation files.
-   ```bash
-   gcc main.c lib/camelot/src/*.c -I lib/camelot/include -o my_app
-   ```
+3.  **Compile:**
+    You must compile your code along with the Camelot core modules.
+    ```bash
+    gcc main.c camelot/src/*.c -o my_game
+    ```
 
------
+### Running Tests
+To verify the framework integrity on your machine:
+```bash
+gcc tests.c src/*.c -std=c2x -o run_tests
+./run_tests
+```
 
-## 📂 Project Structure
+---
 
-A clean, ISO-standard C structure designed for portability.
+##📂 Project StructureA clean, ISO-standard C structure designed for portability.
 
 ```text
 Camelot/
@@ -90,23 +79,24 @@ Camelot/
 ├── include/
 │   └── camelot.h           # The Public Interface (and Poison)
 ├── src/
-│   ├── camelot_memory.c    # Linear Arena implementation
-│   ├── camelot_io.c        # Input Sanitizer implementation
-│   └── camelot_string.c    # String type logic
-└── main.c                  # Showcase Application
+│   ├── camelot_memory.c    # Linear Arena & Allocator
+│   ├── camelot_list.c      # Dynamic List (Vector) logic
+│   ├── camelot_string.c    # Safe String Views
+│   ├── camelot_table.c     # Hash Map implementation
+│   └── camelot_io.c        # File System Helpers
+└── tests.c                 # Verification Suite
 ```
 
------
+---
 
-## 📄 License
+##📄 LicenseMIT — Use, fork, learn, experiment.
 
-MIT — Use, fork, learn, experiment.  
-See [LICENSE](https://www.google.com/search?q=LICENSE) for details.
+See `LICENSE` for details.
 
-## 🎨 Credits
+##🎨 Credits**Author:** Acrilic
 
-**Author:** Acrilic
+**Logo:** [Solarus](https://www.flaticon.com/free-icon/cube_17533083)
 
-### Assets
+You are now ready to start **Phase 3** (The Game Loop) whenever you want! 🎮
 
-  * Logo made by [Solarus](https://www.flaticon.com/free-icon/cube_17533083)
+```
