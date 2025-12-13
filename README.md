@@ -96,7 +96,3 @@ See `LICENSE` for details.
 ##🎨 Credits**Author:** Acrilic
 
 **Logo:** [Solarus](https://www.flaticon.com/free-icon/cube_17533083)
-
-You are now ready to start **Phase 3** (The Game Loop) whenever you want! 🎮
-
-```
