@@ -1,4 +1,5 @@
-#define CAMELOT_VERSION "0.0.0.1"
+#define CAMELOT_VERSION "0.1.0.0"
+// RELEASE.MAJOR.MINOR.PATCH
 
 #ifndef CAMELOT_H
 #define CAMELOT_H
