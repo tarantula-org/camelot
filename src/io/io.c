@@ -60,7 +60,7 @@ void print(const char *fmt, ...) {
             p++; // Consume '%'
             switch (*p) {
                   case 'i': // Integer
-                        put_i64(va_arg(args, long long)); 
+                        put_i64(va_arg(args, int));
                         break;
 
                   case 'f': // Float (Standard double)
