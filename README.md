@@ -26,19 +26,66 @@ We believe in a transparent relationship between the engineer and the machine: s
 
 -----
 
-## 📚 Documentation
+## 📂 Project Structure
 
-Detailed architecture, API references, and design principles are available on our official documentation site:
+A clean, modular architecture designed for portability and logical separation of concerns.
+
+```text
+Camelot/
+├── LICENSE                     # MIT License
+├── README.md                   # Documentation & Manifesto
+├── Makefile                    # Build Automation
+│
+├── include/                    # 📢 PUBLIC INTERFACE
+│   └── camelot/                # Namespace
+│       ├── camelot.h           # The Facade (Single include point)
+│       ├── memory.h            # Arena, Allocators, & RAII Scopes
+│       ├── io.h                # File System & I/O
+│       │
+│       ├── types/              # 🧱 TYPES MODULE
+│       │   ├── primitives.h    # u8, i32, f64, bool, Error codes
+│       │   └── string.h        # Str type & operations
+│       │
+│       └── ds/                 # 📦 DATA STRUCTURES MODULE
+│           ├── array.h         # Dynamic Array definitions
+│           └── table.h         # Hash Map definitions
+│
+├── src/                        # ⚙️ INTERNAL ENGINE
+│   ├── internal.h              # Private shared helpers
+│   │
+│   ├── memory/
+│   │   ├── arena.c             # The Linear Allocator logic
+│   │   └── scope.c             # Auto-cleanup logic
+│   │
+│   ├── types/
+│   │   └── string.c            # String implementation
+│   │
+│   ├── ds/
+│   │   ├── array.c             # Array implementation
+│   │   └── table.c             # Hash Map implementation
+│   │
+│   └── io/
+│       └── fs.c                # File System implementation
+│
+└── tests/                      # 🛡️ QUALITY CONTROL
+    ├── tests.h                 # The Header-Only Test Harness
+    ├── main.c                  # Test Runner Entry Point
+    ├── test_types.c            # Tests for Strings & Primitives
+    ├── test_memory.c           # Tests for Arena & Scopes
+    ├── test_ds.c               # Tests for Arrays & Tables
+    └── test_io.c               # Tests for Files
+
+```
+
+---
+
+##📚 DocumentationDetailed architecture, API references, and design principles are available on our official documentation site:
 
 👉 **[Read the Camelot Docs](https://camelot-1.gitbook.io/docs/)**
 
------
+---
 
-## 📄 License
+##📄 License**MIT** — Use, fork, learn, experiment. See `LICENSE` for details.
 
-**MIT** — Use, fork, learn, experiment. See `LICENSE` for details.
-
-## 🎨 Credits
-
-**Author:** Acrilic
+##🎨 Credits**Author:** Acrilic
 **Logo:** [Solarus](https://www.flaticon.com/free-icon/cube_17533083)
