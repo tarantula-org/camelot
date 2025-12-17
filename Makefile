@@ -5,7 +5,6 @@ AR      = ar
 CFLAGS  = -I include -Wall -Wextra -std=c2x -Wno-unused-function
 
 # VERSIONING
-# Extracts "1.0.0.1" directly from include/camelot/camelot.h
 VERSION := $(shell grep 'define CAMELOT_VERSION' include/camelot/camelot.h | cut -d '"' -f 2)
 
 # 1. Source Directories
