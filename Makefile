@@ -2,7 +2,11 @@
 
 CC      = gcc
 AR      = ar
-CFLAGS  = -I include -Wall -Wextra -std=c99 -Wno-unused-function
+CFLAGS  = -I include -Wall -Wextra -std=c2x -Wno-unused-function
+
+# VERSIONING
+# Extracts "1.0.0.1" directly from include/camelot/camelot.h
+VERSION := $(shell grep 'define CAMELOT_VERSION' include/camelot/camelot.h | cut -d '"' -f 2)
 
 # 1. Source Directories
 SRC_DIR = src
@@ -33,6 +37,7 @@ dirs:
 
 # --- TEST SUITE ---
 test: dirs
+	@echo " [INFO] Camelot v$(VERSION)"
 	@echo " [CC]   Compiling Test Suite..."
 	@$(CC) $(CFLAGS) tests/main.c $(SRCS) -o $(TARGET)
 	@echo " [EXEC] Running Tests..."
@@ -51,23 +56,24 @@ $(LIB): dirs $(OBJS)
 	@rm -f $(OBJS)
 
 package: $(LIB)
+	@echo " [INFO] Building Camelot v$(VERSION)"
 	@echo " [CP]   Copying Headers..."
 	@cp -r include/* $(DIST)/include/
 	
 	@echo " [GEN]  Generating Installers..."
 	
-	# 1. Linux/macOS Installer (Shell Script)
+	# 1. Linux/macOS Installer
 	@echo "#!/bin/bash" > $(DIST)/install.sh
 	@echo "if [ \"\$$EUID\" -ne 0 ]; then echo 'Please run as root'; exit; fi" >> $(DIST)/install.sh
-	@echo "echo '[*] Installing Camelot...'" >> $(DIST)/install.sh
+	@echo "echo '[*] Installing Camelot v$(VERSION)...'" >> $(DIST)/install.sh
 	@echo "cp -r include/camelot /usr/local/include/" >> $(DIST)/install.sh
 	@echo "cp lib/libcamelot.a /usr/local/lib/" >> $(DIST)/install.sh
 	@echo "echo '[V] Camelot Installed! Link with: -lcamelot'" >> $(DIST)/install.sh
 	@chmod +x $(DIST)/install.sh
 	
-	# 2. Windows Installer (Batch Script with Auto-Path)
+	# 2. Windows Installer
 	@echo "@echo off" > $(DIST)/install.bat
-	@echo "echo [*] Installing Camelot to C:\\Camelot..." >> $(DIST)/install.bat
+	@echo "echo [*] Installing Camelot v$(VERSION) to C:\\Camelot..." >> $(DIST)/install.bat
 	
 	@echo "if not exist \"C:\\Camelot\" mkdir \"C:\\Camelot\"" >> $(DIST)/install.bat
 	@echo "xcopy /E /Y include \"C:\\Camelot\\include\\\" >NUL" >> $(DIST)/install.bat
@@ -78,10 +84,9 @@ package: $(LIB)
 	@echo "setx LIBRARY_PATH \"C:\\Camelot\\lib\" >NUL" >> $(DIST)/install.bat
 	
 	@echo "echo [V] Installation Complete!" >> $(DIST)/install.bat
-	@echo "echo [!] NOTE: You must restart your terminal for changes to take effect." >> $(DIST)/install.bat
 	@echo "pause" >> $(DIST)/install.bat
 
-	@echo " [DONE] Package ready at: $(DIST)/"
+	@echo " [DONE] Package v$(VERSION) ready at: $(DIST)/"
 
 clean:
 	@echo " [RM]   Cleaning artifacts..."

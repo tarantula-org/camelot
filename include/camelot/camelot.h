@@ -1,8 +1,8 @@
-#define CAMELOT_VERSION "1.0.0.1"
-// RELEASE.MAJOR.MINOR.PATCH
-
 #ifndef CAMELOT_H
 #define CAMELOT_H
+
+// RELEASE.MAJOR.MINOR.PATCH
+#define CAMELOT_VERSION "1.0.1.0"
 
 #include "io.h"
 #include "memory.h"
