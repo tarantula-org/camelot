@@ -1,5 +1,5 @@
 #include "tests.h"
-#include "types/string.h"
+#include "camelot.h"
 #include <string.h>
 
 TEST(test_string_construction) {

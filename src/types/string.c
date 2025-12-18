@@ -1,5 +1,5 @@
 #include <string.h>
-#include "types/string.h"
+#include "camelot.h"
 
 // --- INTERNAL HELPERS ---
 

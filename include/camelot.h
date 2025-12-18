@@ -2,12 +2,16 @@
 #define CAMELOT_H
 
 // RELEASE.MAJOR.MINOR.PATCH
-#define CAMELOT_VERSION "2.0.0.2"
+#define CAMELOT_VERSION "2.0.0.3"
 
-#include "io.h"
-#include "memory.h"
+// --- MODULES ---
+// We now point to the sub-directories since this file sits at the root.
+#include "camelot/io.h"
+#include "camelot/memory.h"
 #include "types/primitives.h"
 #include "types/string.h"
+#include "ds/list.h"
+#include "ds/table.h"
 
 // --- ALLOW UNSAFE ---
 // If the user has NOT explicitly asked for unsafe access,

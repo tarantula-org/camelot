@@ -1,5 +1,5 @@
 #include "tests.h"
-#include "camelot/io.h"
+#include "camelot.h"
 
 TEST(test_io_visual) {
       io.print("\n      [VISUAL CHECK START]\n");

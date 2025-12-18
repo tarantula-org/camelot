@@ -1,6 +1,5 @@
 #include "tests.h"
-#include "camelot/io.h"
-#include "camelot/memory.h"
+#include "camelot.h"
 #include <stdio.h>
 #include <string.h>
 

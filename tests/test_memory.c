@@ -1,5 +1,5 @@
 #include "tests.h"
-#include <camelot/memory.h>
+#include "camelot.h"
 #include <stdint.h> // for uintptr_t
 
 TEST(test_alignment) {

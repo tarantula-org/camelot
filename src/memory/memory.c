@@ -1,4 +1,4 @@
-#include "camelot/memory.h"
+#include "camelot.h"
 
 void hook(Arena *a, void *buffer, u64 size) {
       a->buf = buffer;

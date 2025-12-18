@@ -1,6 +1,5 @@
 #include <string.h>
-#include "camelot/camelot.h"
-#include "ds/list.h"
+#include "camelot.h"
 
 // --- INTERNAL IMPLEMENTATION ---
 

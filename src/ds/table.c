@@ -1,6 +1,5 @@
 #include <string.h> // For memset/memcpy if needed
-#include "camelot/camelot.h"
-#include "ds/table.h"
+#include "camelot.h"
 
 // --- HELPERS ---
 

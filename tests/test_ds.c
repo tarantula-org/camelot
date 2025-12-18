@@ -1,6 +1,5 @@
 #include "tests.h"
-#include "ds/list.h"
-#include "ds/table.h"
+#include "camelot.h"
 
 TEST(test_paged_list) {
       u8 buffer[1024 * 10];

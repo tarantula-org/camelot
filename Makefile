@@ -5,7 +5,8 @@ AR      = ar
 CFLAGS  = -I include -Wall -Wextra -std=c2x -Wno-unused-function
 
 # VERSIONING
-VERSION := $(shell grep 'define CAMELOT_VERSION' include/camelot/camelot.h | cut -d '"' -f 2)
+# Updated to look at the root header
+VERSION := $(shell grep 'define CAMELOT_VERSION' include/camelot.h | cut -d '"' -f 2)
 
 # 1. Source Directories
 SRC_DIR = src
@@ -66,10 +67,7 @@ package: $(LIB)
 	@echo "if [ \"\$$EUID\" -ne 0 ]; then echo 'Please run as root'; exit; fi" >> $(DIST)/install.sh
 	@echo "echo '[*] Installing Camelot v$(VERSION)...'" >> $(DIST)/install.sh
 	
-	# --- FIX START ---
-	# Copy ALL directories (camelot, ds, types) to /usr/local/include/
 	@echo "cp -r include/* /usr/local/include/" >> $(DIST)/install.sh
-	# --- FIX END ---
 	
 	@echo "cp lib/libcamelot.a /usr/local/lib/" >> $(DIST)/install.sh
 	@echo "echo '[V] Camelot Installed! Link with: -lcamelot'" >> $(DIST)/install.sh
@@ -80,7 +78,6 @@ package: $(LIB)
 	@echo "echo [*] Installing Camelot v$(VERSION) to C:\\Camelot..." >> $(DIST)/install.bat
 	
 	@echo "if not exist \"C:\\Camelot\" mkdir \"C:\\Camelot\"" >> $(DIST)/install.bat
-	# (Windows xcopy /E already handles subfolders correctly)
 	@echo "xcopy /E /Y include \"C:\\Camelot\\include\\\" >NUL" >> $(DIST)/install.bat
 	@echo "xcopy /E /Y lib \"C:\\Camelot\\lib\\\" >NUL" >> $(DIST)/install.bat
 	
@@ -92,11 +89,6 @@ package: $(LIB)
 	@echo "pause" >> $(DIST)/install.bat
 
 	@echo " [DONE] Package v$(VERSION) ready at: $(DIST)/"
-
-clean:
-	@echo " [RM]   Cleaning artifacts..."
-	@rm -rf $(OUT_DIR)
-	@rm -f src/*/*.o
 
 clean:
 	@echo " [RM]   Cleaning artifacts..."
