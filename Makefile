@@ -65,7 +65,10 @@ package: $(LIB)
 	@echo "#!/bin/bash" > $(DIST)/install.sh
 	@echo "if [ \"\$$EUID\" -ne 0 ]; then echo 'Please run as root'; exit; fi" >> $(DIST)/install.sh
 	@echo "echo '[*] Installing Camelot v$(VERSION)...'" >> $(DIST)/install.sh
-	@echo "cp -r include/camelot /usr/local/include/" >> $(DIST)/install.sh
+	
+	# CRITICAL FIX: Copy ALL folders (camelot, ds, types) to /usr/local/include/
+	@echo "cp -r include/* /usr/local/include/" >> $(DIST)/install.sh
+	
 	@echo "cp lib/libcamelot.a /usr/local/lib/" >> $(DIST)/install.sh
 	@echo "echo '[V] Camelot Installed! Link with: -lcamelot'" >> $(DIST)/install.sh
 	@chmod +x $(DIST)/install.sh

@@ -2,7 +2,7 @@
 #define CAMELOT_H
 
 // RELEASE.MAJOR.MINOR.PATCH
-#define CAMELOT_VERSION "2.0.0.0"
+#define CAMELOT_VERSION "2.0.0.1"
 
 #include "io.h"
 #include "memory.h"
