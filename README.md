@@ -41,8 +41,9 @@ Camelot/
 │   └── dist/                   # Production-ready package
 │
 ├── include/                    # 📢 PUBLIC INTERFACE
+│   ├── camelot.h               # The Facade (Single include point)
+│   │
 │   ├── camelot/                # Core Framework
-│   │   ├── camelot.h           # The Facade (Single include point)
 │   │   ├── memory.h            # Arena Allocator & Scopes
 │   │   └── io.h                # I/O Namespace & File System
 │   │
@@ -77,7 +78,6 @@ Camelot/
     ├── test_io.c               # Visual checks for Output
     ├── test_files.c            # Verifies Slurp/Stream logic
     └── test_ds.c               # Verifies Lists & Hash Tables
-
 ```
 
 ---

@@ -5,7 +5,7 @@ AR      = ar
 CFLAGS  = -I include -Wall -Wextra -std=c2x -Wno-unused-function
 
 # VERSIONING
-# Updated to look at the root header
+# Updated: Looks for camelot.h in the root include folder
 VERSION := $(shell grep 'define CAMELOT_VERSION' include/camelot.h | cut -d '"' -f 2)
 
 # 1. Source Directories
@@ -58,6 +58,7 @@ $(LIB): dirs $(OBJS)
 package: $(LIB)
 	@echo " [INFO] Building Camelot v$(VERSION)"
 	@echo " [CP]   Copying Headers..."
+	# Copies include/camelot.h and all subfolders (camelot/, types/, ds/)
 	@cp -r include/* $(DIST)/include/
 	
 	@echo " [GEN]  Generating Installers..."
@@ -67,8 +68,10 @@ package: $(LIB)
 	@echo "if [ \"\$$EUID\" -ne 0 ]; then echo 'Please run as root'; exit; fi" >> $(DIST)/install.sh
 	@echo "echo '[*] Installing Camelot v$(VERSION)...'" >> $(DIST)/install.sh
 	
+	# Copy headers to system path
 	@echo "cp -r include/* /usr/local/include/" >> $(DIST)/install.sh
 	
+	# Copy library
 	@echo "cp lib/libcamelot.a /usr/local/lib/" >> $(DIST)/install.sh
 	@echo "echo '[V] Camelot Installed! Link with: -lcamelot'" >> $(DIST)/install.sh
 	@chmod +x $(DIST)/install.sh

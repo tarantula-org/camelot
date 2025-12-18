@@ -2,7 +2,7 @@
 #define CAMELOT_H
 
 // RELEASE.MAJOR.MINOR.PATCH
-#define CAMELOT_VERSION "2.0.0.3"
+#define CAMELOT_VERSION "2.0.0.4"
 
 // --- MODULES ---
 // We now point to the sub-directories since this file sits at the root.
