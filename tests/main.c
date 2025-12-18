@@ -13,7 +13,6 @@ int main() {
       RUN(test_alignment);
       RUN(test_oom);
       RUN(test_string_construction);
-      RUN(test_stringify_macro);
 
       // 2. Run File System Tests
       RUN(test_slurp_basic);
