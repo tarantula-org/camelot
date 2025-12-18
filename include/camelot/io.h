@@ -24,11 +24,15 @@ typedef enum {
 // Does not append a newline.
 void put(String s);
 
-// Writes a string followed by a newline character ('\n').
+// Writes a string followed by a newline character `'\n'`.
 void putn(String s);
 
 // Replaces 'printf'. Parses a format string and prints arguments.
-// Supported: %i (int), %f (double), %s (char*), %S (String)
+//
+// Supported: 
+// ```
+// %i (int), %f (double), %s (char*), %S (String)
+// ```
 void print(const char *fmt, ...);
 
 // --- FILE OPERATIONS ---
@@ -40,11 +44,13 @@ String slurp(Arena *a, const char *path);
 // Performs the action 'op' on file 'f'.
 // 
 // Usage:
+// ```
 // File f = {0};
 // if (stream(&f, OPEN, "data.txt", 0)) {
 //    stream(&f, READ, buffer, 1024);
 //    stream(&f, CLOSE, NULL, 0);
 // }
+// ```
 u64 stream(File *f, Op op, void *arg, u64 num);
 
 #endif
