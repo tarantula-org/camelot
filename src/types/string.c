@@ -11,6 +11,24 @@ static String internal_from(const char* c) {
       };
 }
 
+static String internal_join(Arena *a, String s1, String s2) {
+      u64 new_len = s1.len + s2.len;
+      // Allocate new memory from the Arena
+      u8 *buf = arena.alloc(a, new_len + 1); 
+      
+      if (!buf) return (String){0};
+
+      // Copy S1
+      memcpy(buf, s1.ptr, s1.len);
+      // Copy S2
+      memcpy(buf + s1.len, s2.ptr, s2.len);
+      
+      // Null terminate for safety/compatibility
+      buf[new_len] = '\0';
+
+      return (String){ .ptr = buf, .len = new_len };
+}
+
 static bool internal_equal(String a, String b) {
       if (a.len != b.len) return false;
       if (a.ptr == b.ptr) return true;
@@ -20,6 +38,7 @@ static bool internal_equal(String a, String b) {
 // --- PUBLIC NAMESPACE ---
 
 const StringNamespace string = {
-      .from = internal_from,
-      .equal   = internal_equal
+      .from  = internal_from,
+      .join  = internal_join,
+      .equal = internal_equal
 };

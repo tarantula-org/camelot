@@ -1,7 +1,7 @@
 #ifndef CAMELOT_LIST_H
 #define CAMELOT_LIST_H
 
-#include "../camelot/memory.h"
+#include "camelot/memory.h"
 
 #define PAGE_SIZE 256
 

@@ -1,46 +1,72 @@
+// Unlock standard allocator ONLY for the internal implementation
+#define ALLOW_UNSAFE 
+#include <stdlib.h> // malloc, free
+#include <string.h> // memset
+
 #include "camelot.h"
 
-void hook(Arena *a, void *buffer, u64 size) {
-      a->buf = buffer;
-      a->cap = size;
+// --- INTERNAL IMPLEMENTATION ---
+
+static Arena internal_create(u64 size) {
+      void *mem = malloc(size);
+      if (!mem) {
+            return (Arena){ .status = OOM };
+      }
+      
+      // Zero out immediately for security
+      memset(mem, 0, size);
+
+      return (Arena){
+            .buf = (u8*)mem,
+            .cap = size,
+            .len = 0,
+            .status = OK
+      };
+}
+
+static void internal_release(Arena *a) {
+      if (a->buf) {
+            free(a->buf);
+            a->buf = NULL;
+      }
+      a->cap = 0;
+      a->len = 0;
+      a->status = OK; // Reset status so it doesn't look like OOM
+}
+
+static void internal_clear(Arena *a) {
+      // SECURITY: Null the memory as requested before resetting cursor
+      if (a->buf && a->len > 0) {
+            memset(a->buf, 0, a->len); 
+      }
       a->len = 0;
       a->status = OK;
 }
 
-void *allocate(Arena *a, u64 size) {
-      // 1. STICKY ERROR CHECK
-      // If the arena is already broken (OOM), don't even try.
-      if (a->status != OK) {
-            return NULL;
-      }
+static void *internal_alloc(Arena *a, u64 size) {
+      if (a->status != OK) return NULL;
 
-      // 2. Calculate current physical address
       uintptr_t address = (uintptr_t)a->buf + a->len;
-
-      // 3. Calculate Alignment Padding
-      // CPUs access memory faster (or won't crash) if data starts at 8-byte boundaries.
-      // Logic:
-      // - (address % 8): The remainder. How many bytes are we PAST the last boundary?
-      // - (8 - remainder): How many bytes forward to the NEXT boundary?
-      // - (% 8): Edge case fix. If we are already aligned (remainder 0), 8-0=8.
-      // We want 0 padding, not 8. So (8 % 8) becomes 0.
+      // 8-byte alignment
       u64 padding = (8 - (address % 8)) % 8;
 
-      // 4. SAFETY CHECK (Critical!)
-      // Ensure we have space for both the padding AND the requested size.
       if (a->len + padding + size > a->cap) {
             a->status = OOM;
             return NULL;
       }
 
-      // 5. Commit
-      a->len += padding;            // Skip the padding bytes
-      void *p = &a->buf[a->len];    // Grab the pointer
-      a->len += size;               // Reserve the actual size
-
+      a->len += padding;
+      void *p = &a->buf[a->len];
+      a->len += size;
+      
       return p;
 }
 
-void reset(Arena *a) {
-      a->len = 0;
-}
+// --- PUBLIC NAMESPACE ---
+
+const ArenaNamespace arena = {
+      .create  = internal_create,
+      .release = internal_release,
+      .clear   = internal_clear,
+      .alloc   = internal_alloc
+};

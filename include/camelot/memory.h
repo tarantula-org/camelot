@@ -4,8 +4,7 @@
 #include "types/primitives.h"
 
 // A Linear Allocator (Arena).
-// It manages a fixed block of memory and allocates by simply moving a pointer forward.
-// This is O(1) fast and prevents memory fragmentation.
+// ALWAYS manages heap memory.
 typedef struct {
       u8 *buf;
       u64 len;
@@ -13,18 +12,42 @@ typedef struct {
       Result status;
 } Arena;
 
-// --- FUNCTIONS ---
+// --- NAMESPACE ---
 
-// Hooks the Arena to a backing buffer.
-// The Arena does not own the memory; it just manages it.
-void hook(Arena *a, void *buffer, u64 size);
+typedef struct {
+      // Creates a new Arena by requesting 'size' bytes from the OS.
+      // Returns the Arena struct by value.
+      // Usage: 
+      // ```
+      // Arena a = arena.create(1024);
+      // ```
+      Arena (*create)(u64 size);
 
-// Reserves a block of memory 'size' bytes long from the Arena.
-// Returns NULL if the Arena is full.
-void *allocate(Arena *a, u64 size);
+      // Returns the memory to the OS and invalidates the Arena.
+      // Usage:
+      // ```
+      // arena.release(&a);
+      // ```
+      void (*release)(Arena *a);
 
-// Resets the cursor to zero.
-// This effectively "frees" everything in the Arena instantly.
-void reset(Arena *a);
+      // Resets cursor to zero AND securely zeroes out the used memory.
+      // Usage:
+      // ```
+      // arena.clear(&a);
+      // ```
+      void (*clear)(Arena *a);
+
+      // Reserves a block of memory from the Arena.
+      // Usage:
+      // ```
+      // int *x = arena.alloc(&a, sizeof(int));
+      // ```
+      void* (*alloc)(Arena *a, u64 size);
+} ArenaNamespace;
+
+extern const ArenaNamespace arena;
+
+// Backwards compatibility / Shortcut if you prefer global access
+// void *allocate(Arena *a, u64 size); 
 
 #endif

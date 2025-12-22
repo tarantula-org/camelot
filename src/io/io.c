@@ -4,10 +4,10 @@
 
 #include "camelot/io.h"
 
-#include <unistd.h> // write
-#include <stdarg.h> // va_list
-#include <stdio.h>  // snprintf
-#include <string.h> // strlen
+#include <unistd.h>     // write
+#include <stdarg.h>     // va_list
+#include <stdio.h>      // snprintf
+#include <string.h>     // strlen
 
 // --- CORE I/O ---
 
@@ -77,7 +77,7 @@ void print(const char *fmt, ...) {
                         put(va_arg(args, String)); 
                         break;
 
-                  default: // Unknown (e.g. "50%") -> print "%"
+                  default:                // Unknown (e.g. "50%") -> print "%"
                         write(1, p-1, 1); // Print the '%'
                         p--;              // Backtrack to print the char next loop
             }

@@ -15,26 +15,21 @@ static u64 internal_stream(File *f, Op op, void *arg, u64 num) {
                   if (!h) {
                         f->status = FILE_NOT_FOUND;
                         f->size = 0;
-                        return 0; // Fail
+                        return 0; 
                   }
 
-                  // --- PIPE FIX LOGIC ---
-                  // Try to jump to end to measure size.
                   if (fseek(h, 0, SEEK_END) == 0) {
-                        // Success: It's a regular file
                         long len = ftell(h);
                         fseek(h, 0, SEEK_SET);
                         f->size = (u64)len;
                   } else {
-                        // Failure: It's a Pipe, Socket, or Character Device
-                        // We cannot measure size, but we can still read streamingly.
                         clearerr(h); 
-                        f->size = 0; // Unknown size
+                        f->size = 0; 
                   }
 
                   f->handle = h;
                   f->status = OK;
-                  return 1; // Success
+                  return 1;
             }
 
             case READ: {
@@ -64,14 +59,13 @@ static String internal_slurp(Arena *a, const char *path) {
       File f = {0}; 
       if (!internal_stream(&f, OPEN, (void*)path, 0)) return (String){0};
 
-      // CRITICAL: We cannot slurp pipes effectively without a resizeable array.
-      // If size is 0, we fail (for now) to avoid allocation issues.
       if (f.size == 0) {
             internal_stream(&f, CLOSE, NULL, 0);
             return (String){0}; 
       }
 
-      u8 *buf = allocate(a, f.size + 1);
+      // Changed: arena.alloc
+      u8 *buf = arena.alloc(a, f.size + 1);
       if (!buf) {
             internal_stream(&f, CLOSE, NULL, 0);
             return (String){0};
@@ -85,14 +79,10 @@ static String internal_slurp(Arena *a, const char *path) {
       return (String){ .ptr = buf, .len = f.size };
 }
 
-// --- LINKING EXTERNALS ---
-// These functions are implemented in src/io/io.c
-// We link them here to populate the namespace.
 extern void put(String s);
 extern void putn(String s);
 extern void print(const char *fmt, ...);
 
-// --- PUBLIC NAMESPACE ---
 const IONamespace io = {
       .put    = put,
       .putn   = putn,

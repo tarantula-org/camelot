@@ -5,7 +5,7 @@
 
 static List internal_create(Arena *a, u64 item_size) {
       u64 initial_cap = 16;
-      void **dir = allocate(a, sizeof(void*) * initial_cap);
+      void **dir = arena.alloc(a, sizeof(void*) * initial_cap);
 
       return (List){
             .source    = a,
@@ -21,7 +21,7 @@ static void ensure_directory(List *l) {
       if (l->pages_len < l->pages_cap) return;
 
       u64 new_cap = l->pages_cap * 2;
-      void **new_dir = allocate(l->source, sizeof(void*) * new_cap);
+      void **new_dir = arena.alloc(l->source, sizeof(void*) * new_cap);
 
       if (l->pages) {
             memcpy(new_dir, l->pages, sizeof(void*) * l->pages_cap);
@@ -36,7 +36,7 @@ static void internal_push(List *l, void *data) {
 
       if (item_idx == 0) {
             ensure_directory(l);
-            void *new_page = allocate(l->source, l->item_size * PAGE_SIZE);
+            void *new_page = arena.alloc(l->source, l->item_size * PAGE_SIZE);
             l->pages[page_idx] = new_page;
             l->pages_len++;
       }
