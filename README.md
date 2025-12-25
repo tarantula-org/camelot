@@ -20,23 +20,27 @@ A modern standard library replacement for C23 enforcing safety, ergonomics, and 
 
 **"C is legacy."** We reject this statement.
 
-C runs the world. The problem isn't the language; it is the **Standard Library**. `libc` is stuck in 1989—unsafe string handling, manual memory management hell, and inconsistent I/O.
+The problem isn't the language; it is the **Standard Library**. Camelot bridges the gap by bringing modern concepts into the raw power of C:
 
-**Camelot** bridges the gap. We bring modern concepts—Linear Allocators (Arenas), RAII Scopes, Slice-based Strings, and Generic Collections—into the raw power of C. We believe in:
-
-1.  **Workspaces, not Malloc:** Memory is managed in scopes, not individual pointers.
+1.  **Workspaces, not Malloc:** Memory is managed in scopes (Arenas), not individual pointers.
 2.  **Views, not Copies:** Data is immutable and shared by default.
 3.  **Transparency:** No hidden allocations. No magic.
 
 ---
 
+## 🚀 Quick Start
+
+Get from zero to a running kernel in 30 seconds.
+
+👉 **[Get Started Guide](https://camelot-1.gitbook.io/docs/start-here/quick-start)**
+
+---
+
 ## ⚔️ The Manifesto
 
-**"Why use C in the 2020s?"**
+**"Why still use C?"**
 
-It is the industry's favorite question. The answer is not nostalgia; it is architectural necessity. C remains the foundational substrate of our digital infrastructure and the universal protocol through which all other languages must communicate.
-
-We have compiled a comprehensive technical defense of C, dismantling the "Legacy" myth with architectural proofs and industry data.
+It is the industry's favorite question. The answer is not nostalgia; it is architectural necessity. We have compiled a comprehensive technical defense of C, dismantling the "Legacy" myth with architectural proofs.
 
 👉 **[Read the Full Manifesto](https://camelot-1.gitbook.io/docs/manifesto)**
 
@@ -44,7 +48,7 @@ We have compiled a comprehensive technical defense of C, dismantling the "Legacy
 
 ## 📚 Documentation
 
-Detailed API references, architecture deep-dives, and performance characteristics are available on our official documentation site:
+Detailed API references, architecture deep-dives, and performance characteristics are available on our official documentation site.
 
 👉 **[Read the Camelot Docs](https://camelot-1.gitbook.io/docs/)**
 
