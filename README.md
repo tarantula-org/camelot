@@ -10,7 +10,7 @@ A modern standard library replacement for C23 enforcing safety, ergonomics, and 
 [![Standard: C23](https://img.shields.io/badge/standard-C23-purple.svg)](https://en.wikipedia.org/wiki/C23_(C_standard_revision))
 [![Documentation: GitBook](https://img.shields.io/badge/docs-GitBook-blue.svg)](https://camelot-1.gitbook.io/docs/)
 
-[**Quick Start**](https://camelot-1.gitbook.io/docs/start-here/quick-start) • [**Documentation**](https://camelot-1.gitbook.io/docs/) • [**Contribute**](CONTRIBUTING.md)
+[**Quick Start**](https://camelot-1.gitbook.io/docs/start-here/quick-start) • [**Roadmap**](https://camelot-1.gitbook.io/docs/roadmap) • [**Contribute**](CONTRIBUTING.md)
 
 </div>
 
@@ -46,6 +46,16 @@ It is the industry's favorite question. The answer is not nostalgia; it is archi
 
 ---
 
+## 🗺️ Roadmap
+
+We follow a strict, layered architectural progression (Epochs).
+
+👉 **[View the Strategic Roadmap](https://camelot-1.gitbook.io/docs/roadmap)**
+
+**Current Focus (Epoch 2):** Compatibility & Hardening.
+
+---
+
 ## 📂 Structure
 
 ```text
@@ -56,11 +66,3 @@ Camelot/
 ├── packages/      # 🎁 Build Artifacts
 └── Makefile       #    Build Automation
 ```
-
----
-
-## 📄 License & Contribution
-
-**Camelot** is open-source software licensed under the **MIT License**.
-
-Contributions are welcome but strictly regulated. All submissions must adhere to **[The Architectural Rigor Standard (ARS-1.0)](CONTRIBUTING.md)** regarding code quality, memory sovereignty, and documentation.
