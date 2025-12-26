@@ -1,13 +1,20 @@
 #ifndef CAMELOT_LIST_H
 #define CAMELOT_LIST_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "camelot/memory.h"
 
 #define PAGE_SIZE 256
 
+// A Paged Dynamic Array.
+// Ensures O(1) pointer stability (pointers to elements never invalidate).
+// Grows automatically by allocating new pages from the source Arena.
 typedef struct {
       Arena* source;
-      void** pages;     // Directory of pages
+      void** pages;
       u64 pages_cap;
       u64 pages_len;
       u64 item_size;
@@ -17,23 +24,39 @@ typedef struct {
 // --- NAMESPACE ---
 
 typedef struct {
-      // Creates a new Paged List
+      // Initializes a new List on the given Arena.
       // Usage:
       // ```
-      // List foo = list.create(&arena, sizeof(int));
+      // List ints = list.create(&ctx, sizeof(int));
       // ```
       List (*create)(Arena *a, u64 item_size);
 
-      // Pushes an item to the end. O(1).
+      // Appends data to the end of the list.
+      // Usage:
+      // ```
+      // list.push(&ints, &value);
+      // ```
       void (*push)(List *l, void *data);
 
-      // Gets a pointer to the item at index. O(1).
+      // Retrieves a pointer to the item at index.
+      // Usage:
+      // ```
+      // int *x = list.get(&ints, 5);
+      // ```
       void* (*get)(List *l, u64 index);
 
-      // Removes item at index by swapping with last. O(1).
+      // Swap-removes the item at index.
+      // Usage:
+      // ```
+      // list.remove(&ints, 5);
+      // ```
       void (*remove)(List *l, u64 index);
 } ListNamespace;
 
 extern const ListNamespace list;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

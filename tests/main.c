@@ -13,7 +13,7 @@ int main() {
       // 1. Run Logic Tests (Memory & Types)
       RUN(test_alignment);
       RUN(test_oom);
-      RUN(test_scoped_macro);
+      RUN(test_workspace_macro); // Updated name
       RUN(test_string_construction);
       RUN(test_paged_list);
       RUN(test_hash_table);

@@ -1,8 +1,12 @@
 #ifndef CAMELOT_H
 #define CAMELOT_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // RELEASE.MAJOR.MINOR.PATCH
-#define CAMELOT_VERSION "2.2.0.0"
+#define CAMELOT_VERSION "2.3.2.0"
 
 // --- MODULES ---
 #include "camelot/io.h"
@@ -12,29 +16,21 @@
 #include "ds/list.h"
 #include "ds/table.h"
 
-// --- SMART SCOPES ---
-
-static inline void _cleanup_arena_func(Arena *a) {
-    if (a) arena.release(a);
-}
-
-// For embedded safety/ergonomics. Auto-releases the Arena when the scope ends.
-// Usage:
-// ```
-// scoped Arena a = arena.create(1024);
-// ```
-#define scoped __attribute__((cleanup(_cleanup_arena_func)))
-
-// --- ALLOW UNSAFE ---
+// --- SAFETY SWITCHES ---
+// Poison standard library functions to enforce Camelot usage.
 #ifndef ALLOW_UNSAFE
-      // 1. MEMORY MANAGEMENT
-      #pragma GCC poison malloc calloc realloc free aligned_alloc
-      
-      // 2. STRING MANIPULATION
-      #pragma GCC poison strcpy strncpy strcat strncat strtok gets
-      
-      // 3. UNSAFE I/O
-      #pragma GCC poison sprintf vsprintf scanf fscanf sscanf printf fprintf vprintf
+    // 1. Memory (Use arena.alloc)
+    #pragma GCC poison malloc calloc realloc free aligned_alloc
+    
+    // 2. Strings (Use string.from / io.print)
+    #pragma GCC poison strcpy strncpy strcat strncat strtok gets
+    
+    // 3. IO (Use io.print / io.scan)
+    #pragma GCC poison sprintf vsprintf scanf fscanf sscanf printf fprintf vprintf
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif
