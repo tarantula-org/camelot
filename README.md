@@ -16,7 +16,7 @@ A modern standard library replacement for C23 enforcing safety, ergonomics, and 
 
 ---
 
-## 📘 Mission
+## Mission
 
 **"C is legacy."** We reject this statement.
 
@@ -28,41 +28,41 @@ The problem isn't the language; it is the **Standard Library**. Camelot bridges 
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 We provide a comprehensive guide to get you from zero to a running kernel in 30 seconds.
 
-👉 **[Read the Quick Start Guide](https://camelot-1.gitbook.io/docs/start-here/quick-start)**
+**[Read the Quick Start Guide](https://camelot-1.gitbook.io/docs/start-here/quick-start)**
 
 ---
 
-## ⚔️ The Manifesto
+## Manifesto
 
 **"Why still use C?"**
 
 It is the industry's favorite question. The answer is not nostalgia; it is architectural necessity. We have compiled a comprehensive technical defense of C, dismantling the "Legacy" myth with architectural proofs.
 
-👉 **[Read the Full Manifesto](https://camelot-1.gitbook.io/docs/manifesto)**
+**[Read the Full Manifesto](https://camelot-1.gitbook.io/docs/manifesto)**
 
 ---
 
-## 🗺️ Roadmap
+## Roadmap
 
 We follow a strict, layered architectural progression (Epochs).
 
-👉 **[View the Strategic Roadmap](https://camelot-1.gitbook.io/docs/roadmap)**
+**[View the Strategic Roadmap](https://camelot-1.gitbook.io/docs/roadmap)**
 
 **Current Focus (Epoch 2):** Compatibility & Hardening.
 
 ---
 
-## 📂 Structure
+## Structure
 
 ```text
 Camelot/
-├── include/       # 📢 Public Interface
-├── src/           # ⚙️ Internal Engine
-├── tests/         # 🛡️ Unit Test Suite
-├── packages/      # 🎁 Build Artifacts
-└── Makefile       #    Build Automation
+├── include/       # Public Interface
+├── src/           # Internal Engine
+├── tests/         # Unit Test Suite
+├── packages/      # Build Artifacts
+└── Makefile       # Build Automation
 ```
