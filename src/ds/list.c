@@ -7,8 +7,10 @@
  * Compliance is mandatory for all contributions.
  */
 
+// clang-format off
 #include <string.h>
 #include "camelot.h"
+// clang-format on
 
 // --- INTERNAL IMPLEMENTATION ---
 

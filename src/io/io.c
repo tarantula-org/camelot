@@ -11,11 +11,13 @@
 #define ALLOW_UNSAFE
 #endif
 
+// clang-format off
 #include <stdarg.h> // va_list, va_start, va_end
 #include <stdio.h>  // snprintf
 #include <string.h> // strlen
 #include <unistd.h> // write, read
 #include "camelot.h"
+// clang-format on
 
 #define IO_DEFAULT_SCAN_CAP 4096
 

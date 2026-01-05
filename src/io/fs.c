@@ -7,8 +7,10 @@
  * Compliance is mandatory for all contributions.
  */
 
+// clang-format off
 #include <stdio.h>
 #include "camelot.h"
+// clang-format on
 
 // --- EXTERNAL LINKAGE ---
 extern String scan(Arena *a, u64 cap);

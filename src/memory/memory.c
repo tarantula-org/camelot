@@ -9,9 +9,11 @@
 
 #define ALLOW_UNSAFE
 
+// clang-format off
 #include <stdlib.h>
 #include <string.h>
 #include "camelot.h"
+// clang-format on
 
 // --- INTERNAL IMPLEMENTATION ---
 

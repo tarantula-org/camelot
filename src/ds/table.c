@@ -9,8 +9,10 @@
  * See: https://camelot-1.gitbook.io/docs/ds/table
  */
 
+// clang-format off
 #include <string.h>
 #include "camelot.h"
+// clang-format on
 
 // --- CONSTANTS ---
 #define FNV_OFFSET_BASIS 0xcbf29ce484222325
