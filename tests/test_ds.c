@@ -3,7 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * Governed by The Architectural Rigor Standard (ARS-1.0).
+ * Governed by the Avant Systems Canon (ASC-1.1).
  * Compliance is mandatory for all contributions.
  */
 
