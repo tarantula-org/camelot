@@ -15,10 +15,13 @@ SRCS    = $(wildcard src/memory/*.c) \
           $(wildcard src/io/*.c) \
           $(wildcard src/ds/*.c)
 
-# 2. Object Files
+# 2. Test Source Directories
+TEST_SRCS = $(wildcard tests/*.c)
+
+# 3. Object Files
 OBJS    = $(SRCS:.c=.o)
 
-# 3. Output Configuration
+# 4. Output Configuration
 OUT_DIR = packages
 DIST    = $(OUT_DIR)/dist
 TARGET  = $(OUT_DIR)/test_runner
@@ -39,7 +42,8 @@ dirs:
 test: dirs
 	@echo " [INFO] Camelot v$(VERSION)"
 	@echo " [CC]   Compiling Test Suite..."
-	@$(CC) $(CFLAGS) tests/main.c $(SRCS) -o $(TARGET)
+	# FIX: Include all test sources (TEST_SRCS) in the build command
+	@$(CC) $(CFLAGS) $(TEST_SRCS) $(SRCS) -o $(TARGET)
 	@echo " [EXEC] Running Tests..."
 	@echo "--------------------------------------------------"
 	@./$(TARGET)
