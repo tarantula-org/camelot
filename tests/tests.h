@@ -5,40 +5,45 @@
  *
  * Governed by The Architectural Rigor Standard (ARS-1.0).
  * Compliance is mandatory for all contributions.
-*/
+ */
 
-#ifndef CAMELOT_TESTS_H
-#define CAMELOT_TESTS_H
-
-// 1. UNLOCK SAFETY
-// We define this so the tests are allowed to use 'printf'
-// to report success/failure.
-#define ALLOW_UNSAFE 
+#ifndef TESTS_H
+#define TESTS_H
 
 #include <stdio.h>
-#include <stdbool.h>
+#include "camelot.h"
 
-// Global counters
+#define ALLOW_UNSAFE
+
+// Global Test State
 static int tests_run = 0;
 static int tests_failed = 0;
 
-// --- MACROS ---
+#define TEST(name) static void name()
 
-#define TEST(name) void name()
+/*
+ * MACRO: REQUIRE
+ * Usage: REQUIRE(x == 1);
+ * Effect: Prints failure and increments counter if condition is false.
+ */
+#define REQUIRE(condition)                                                                         \
+      do {                                                                                         \
+            if (!(condition)) {                                                                    \
+                  printf("FAILED: [%s] at %s:%d\n", #condition, __FILE__, __LINE__);               \
+                  tests_failed++;                                                                  \
+            }                                                                                      \
+      } while (0)
 
-#define REQUIRE(condition) \
-    do { \
-        if (!(condition)) { \
-            printf("FAILED: [%s] at %s:%d\n", #condition, __FILE__, __LINE__); \
-            tests_failed++; \
-        } \
-    } while(0)
-
-#define RUN(test) \
-    do { \
-        printf("Running %s...\n", #test); \
-        test(); \
-        tests_run++; \
-    } while(0)
+/*
+ * MACRO: RUN
+ * Usage: RUN(test_name);
+ * Effect: Executes the test function and tracks stats.
+ */
+#define RUN(test)                                                                                  \
+      do {                                                                                         \
+            printf("Running %s...\n", #test);                                                      \
+            test();                                                                                \
+            tests_run++;                                                                           \
+      } while (0)
 
 #endif

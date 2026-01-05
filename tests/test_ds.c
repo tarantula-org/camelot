@@ -5,10 +5,11 @@
  *
  * Governed by The Architectural Rigor Standard (ARS-1.0).
  * Compliance is mandatory for all contributions.
-*/
+ */
 
 #include "tests.h"
-#include "camelot.h"
+
+// --- LIST TESTS ---
 
 TEST(test_paged_list) {
       Arena a = arena.create(1024 * 10);
@@ -29,12 +30,14 @@ TEST(test_paged_list) {
 
       list.remove(&nums, 10);
       int *new_val1 = list.get(&nums, 10);
-      
-      REQUIRE(*new_val1 == 299); 
+
+      REQUIRE(*new_val1 == 299);
       REQUIRE(nums.count == 299);
 
       arena.release(&a);
 }
+
+// --- TABLE TESTS ---
 
 TEST(test_hash_table) {
       Arena a = arena.create(4096);
@@ -52,4 +55,9 @@ TEST(test_hash_table) {
       REQUIRE(missing == NULL);
 
       arena.release(&a);
+}
+
+void test_ds() {
+      RUN(test_paged_list);
+      RUN(test_hash_table);
 }
