@@ -23,13 +23,17 @@ To remain valid across radically different systems—from kernels and allocators
 ### 1.2 Canonical Roles
 The following roles are normative. Projects may refine or extend them, but their responsibilities may not be weakened.
 
-* **Memory Subsystem** Responsible for raw allocation, region management, allocator policy, and pointer-level operations.
+* **Memory Subsystem**
+  Responsible for raw allocation, region management, allocator policy, and pointer-level operations.
 
-* **Data Structure Subsystem** Responsible for generic containers, hashing, indexing, and collection primitives.
+* **Data Structure Subsystem**
+  Responsible for generic containers, hashing, indexing, and collection primitives.
 
-* **I/O Subsystem** Responsible for operating system interaction, files, sockets, devices, and external boundaries.
+* **I/O Subsystem**
+  Responsible for operating system interaction, files, sockets, devices, and external boundaries.
 
-* **Application Logic** All remaining business logic, orchestration, tests, and feature code.
+* **Application Logic**
+  All remaining business logic, orchestration, tests, and feature code.
 
 ---
 
@@ -98,12 +102,12 @@ All exemptions require:
 
 ---
 
-## 6. DEEP DOCUMENTATION & CO-LOCATION
+## 6. DEEP DOCUMENTATION & LINKAGE
 
-### 6.1 Co-Location Rule
-Documentation for complex or exempt logic **MUST** be co-located within a `docs/` hierarchy mirroring the source tree.
+### 6.1 Centralized Documentation Rule
+Documentation for complex or exempt logic **MUST** be published to the project's **Centralized Documentation Platform** (e.g., GitBook, Wiki, Sphinx Site).
 
-*Example:* `src/ds/map.c` → `docs/ds/map.md`
+*Rationale:* Documentation scattered across local markdown files becomes stale and undiscoverable. The Single Source of Truth must remain the official platform.
 
 ### 6.2 Required Contents
 Deep Documentation **MUST** include:
@@ -113,17 +117,24 @@ Deep Documentation **MUST** include:
 4. Failure Modes and Edge Cases
 5. Performance Characteristics or Microbenchmarks (where applicable)
 
-### 6.3 Source Linkage
-Source files implementing complex logic **MUST** include a header reference to the corresponding Deep Document.
+### 6.3 Source Linkage (The URL Rule)
+Source files implementing complex logic **MUST** include a header reference containing the **direct URL** to the specific Deep Documentation page.
+
+*Example:*
+```c
+// See: [https://docs.project.com/algorithms/hash-map](https://docs.project.com/algorithms/hash-map)
+```
 
 ---
 
 ## 7. PUBLIC INTERFACE CONTRACTS
 
 ### 7.1 Intent-First Requirement
+
 Every Public Interface **MUST** include a structured comment block adhering to the following strict format. The **USAGE** section must include a Markdown code block.
 
 **Required Format:**
+
 ```c
 /*
  * INTENT: <Why this interface exists>
@@ -133,8 +144,7 @@ Every Public Interface **MUST** include a structured comment block adhering to t
  * ```
  * INVARIANTS: <Preconditions and Postconditions>
  * FAILURE MODES: <Explicit Error Semantics>
- */
-
+*/
 ```
 
 ### 7.2 Machine Readability
@@ -164,7 +174,7 @@ Continuous Integration **MUST** enforce formatting, static analysis, and testing
 
 ### 9.1 Exemption Registry
 
-All exemptions **MUST** be recorded in a central log (e.g., `docs/exemptions/`) including rationale, reviewers, and a sunset or re-evaluation date.
+All exemptions **MUST** be recorded in a central log (e.g., in the Centralized Documentation Platform) including rationale, reviewers, and a sunset or re-evaluation date.
 
 ### 9.2 Review Authority
 
@@ -193,7 +203,7 @@ Before opening a Pull Request:
 * [ ] Tier obligations are satisfied
 * [ ] No direct allocation outside the Memory Subsystem
 * [ ] Public interfaces include Intent-First contracts with Code Blocks
-* [ ] Complex logic has co-located Deep Documentation
+* [ ] Complex logic has a valid URL Link to the Centralized Docs
 * [ ] Automation configuration is respected
 * [ ] Defects include reproduction tests
 
