@@ -23,17 +23,13 @@ To remain valid across radically different systems—from kernels and allocators
 ### 1.2 Canonical Roles
 The following roles are normative. Projects may refine or extend them, but their responsibilities may not be weakened.
 
-* **Memory Subsystem**  
-  Responsible for raw allocation, region management, allocator policy, and pointer-level operations.
+* **Memory Subsystem** Responsible for raw allocation, region management, allocator policy, and pointer-level operations.
 
-* **Data Structure Subsystem**  
-  Responsible for generic containers, hashing, indexing, and collection primitives.
+* **Data Structure Subsystem** Responsible for generic containers, hashing, indexing, and collection primitives.
 
-* **I/O Subsystem**  
-  Responsible for operating system interaction, files, sockets, devices, and external boundaries.
+* **I/O Subsystem** Responsible for operating system interaction, files, sockets, devices, and external boundaries.
 
-* **Application Logic**  
-  All remaining business logic, orchestration, tests, and feature code.
+* **Application Logic** All remaining business logic, orchestration, tests, and feature code.
 
 ---
 
@@ -125,13 +121,24 @@ Source files implementing complex logic **MUST** include a header reference to t
 ## 7. PUBLIC INTERFACE CONTRACTS
 
 ### 7.1 Intent-First Requirement
-Every Public Interface **MUST** include structured documentation specifying:
-1. Intent
-2. Minimal Usage Example
-3. Preconditions and Postconditions
-4. Explicit Failure Semantics
+Every Public Interface **MUST** include a structured comment block adhering to the following strict format. The **USAGE** section must include a Markdown code block.
+
+**Required Format:**
+```c
+/*
+ * INTENT: <Why this interface exists>
+ * USAGE:
+ * ```
+ * <Code Example>
+ * ```
+ * INVARIANTS: <Preconditions and Postconditions>
+ * FAILURE MODES: <Explicit Error Semantics>
+ */
+
+```
 
 ### 7.2 Machine Readability
+
 Projects *SHOULD* include a machine-readable (YAML/JSON) block alongside interface documentation to enable automated analysis.
 
 ---
@@ -139,12 +146,15 @@ Projects *SHOULD* include a machine-readable (YAML/JSON) block alongside interfa
 ## 8. TOOLING & AUTOMATION
 
 ### 8.1 Machine-Verifiable Configuration
+
 Each repository **MUST** define a root-level configuration file (e.g., `.asc_requirements.toml`) declaring required tooling and versions.
 
 The Canon intentionally names no tools. The configuration file is authoritative.
 
 ### 8.2 CI Enforcement
+
 Continuous Integration **MUST** enforce formatting, static analysis, and testing.
+
 * Failing automation **PROHIBITS** human review.
 * CI **MUST** fail on any new warnings introduced in Tier A or Tier B code.
 
@@ -153,17 +163,22 @@ Continuous Integration **MUST** enforce formatting, static analysis, and testing
 ## 9. GOVERNANCE & METRICS
 
 ### 9.1 Exemption Registry
+
 All exemptions **MUST** be recorded in a central log (e.g., `docs/exemptions/`) including rationale, reviewers, and a sunset or re-evaluation date.
 
 ### 9.2 Review Authority
+
 A Change Request **MUST** be rejected if:
+
 * Required tests are missing.
 * The logic violates the Five-Minute Rule.
 * Errors are silently ignored.
 * Magic values exist without named constants.
 
 ### 9.3 Health Indicators
+
 Projects *SHOULD* track:
+
 * Tier A Compliance Rate (Target: 100%)
 * Defect Escape Rate (Target: <0.1 per KLOC)
 * Review Cycle Time (Target: <24h)
@@ -177,7 +192,7 @@ Before opening a Pull Request:
 * [ ] Change is mapped to an Architectural Role
 * [ ] Tier obligations are satisfied
 * [ ] No direct allocation outside the Memory Subsystem
-* [ ] Public interfaces include Intent-First contracts
+* [ ] Public interfaces include Intent-First contracts with Code Blocks
 * [ ] Complex logic has co-located Deep Documentation
 * [ ] Automation configuration is respected
 * [ ] Defects include reproduction tests

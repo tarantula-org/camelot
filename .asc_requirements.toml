@@ -1,0 +1,30 @@
+# Avant Systems Canon - Repository Configuration
+# Standard: ASC-1.1
+
+[meta]
+project_name = "Camelot"
+canon_version = "1.1"
+
+[format]
+# The tool used to enforce code style
+engine = "clang-format"
+version = "15.0"
+# Standard glob patterns for formatted files
+include = ["src/**/*.c", "include/**/*.h", "tests/**/*.c"]
+exclude = ["packages/**/*"]
+
+[lint]
+# Static analysis engines
+engines = ["cppcheck", "clang-tidy"]
+# Strict mode: fail on new warnings
+strict = true
+
+[test]
+# The command to run the Tier A verification suite
+command = "make test"
+# Required artifact to prove success
+artifact = "packages/test_runner"
+
+[ci]
+# The gates that must pass before merge (Human Review Prohibition)
+gates = ["format", "lint", "test"]
