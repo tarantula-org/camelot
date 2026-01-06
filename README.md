@@ -51,7 +51,7 @@ It is the industry's favorite question. The answer is not nostalgia; it is archi
 
 We follow a strict, layered architectural progression (Epochs).
 
-**[View the Strategic Roadmap](https://camelot-1.gitbook.io/docs/roadmap)**
+**[View the Roadmap](https://camelot-1.gitbook.io/docs/roadmap)**
 
 ---
 
