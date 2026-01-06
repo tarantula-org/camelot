@@ -1,17 +1,25 @@
-## Description
-## Compliance Checklist (ASC-1.1)
-By submitting this Pull Request, I certify that:
+# Pull Request
 
-- [ ] **Role Mapping:** My changes strictly adhere to the responsibilities of their subsystem.
-- [ ] **Safety:** I have NOT used `malloc/free` outside of `src/memory/`.
-- [ ] **Hygiene:** I have run `make test` and all tests pass.
-- [ ] **Automaton:** I have run `clang-format` on all modified files.
-- [ ] **Documentation:** I have updated the headers to reflect public API changes.
+## 1. Context & Intent
+[REPLACE THIS TEXT WITH YOUR CONTEXT]
 
-## Type of Change
+## 2. Architectural Role
+**Target Subsystem:** [ENTER ROLE HERE]
+
+## 3. Type of Change
 - [ ] `feat` (New functionality)
 - [ ] `fix` (Bug fix)
-- [ ] `refactor` (No functional change)
+- [ ] `refactor` (Refactoring without functional change)
 - [ ] `perf` (Optimization)
+- [ ] `docs` (Documentation update)
+- [ ] `chore` (Build scripts, configs, maintenance)
 
-## Proof of Verification
+## 4. Compliance Checklist
+- [ ] **Role Mapping:** Changes strictly adhere to the responsibilities of the target subsystem.
+- [ ] **Safety:** No `unsafe` / `malloc` usage outside authorized roles.
+- [ ] **Hygiene:** `make test` passes locally.
+- [ ] **Automaton:** Code is formatted via `clang-format`.
+
+## 5. Verification
+```text
+[PASTE TERMINAL OUTPUT HERE]
