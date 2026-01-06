@@ -1,5 +1,5 @@
 # Security Policy
-**Governed by the Avant Systems Canon (ASC-1.1)**
+**Governed by the Avant Systems Canon (ASC-1.2)**
 
 Camelot is a foundational kernel for systems engineering, maintained by **Tarantula Tech**. We hold our **Memory** and **I/O** subsystems to the highest standards of correctness.
 
@@ -55,4 +55,5 @@ Camelot guarantees safety *only* when usage adheres to the strictures of **ASC-1
 We pledge not to pursue legal action against researchers who:
 * Engage in testing/research without harming Camelot users or infrastructure.
 * Adhere to this policy and **Responsible Disclosure** guidelines.
+
 * Do not publish details until a patch is released or the disclosure timeline (90 days) expires.
