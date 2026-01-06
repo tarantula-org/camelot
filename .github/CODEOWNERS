@@ -1,19 +1,28 @@
-# Role Map
-## Avant Systems Canon (ASC-1.1)
+# Tarantula Tech Governance
+# Governed by Avant Systems Canon (ASC-1.2)
 
-# 1. Memory Subsystem
-src/memory/       @AKRiLLiCK
-include/camelot/memory.h @AKRiLLiCK
+# --- THE DIRECTORATE (Tier 0) ---
+# Strategic control.
+/SECURITY.md             @tarantula-org/steering
+/CONTRIBUTING.md         @tarantula-org/steering
+/.github/                @tarantula-org/steering
 
-# 2. Data Structure Subsystem
-src/ds/           @AKRiLLiCK
-include/ds/       @AKRiLLiCK
-src/types/        @AKRiLLiCK
+# --- CORE SYSTEMS (Tier 1) ---
+# Low-level engineering (Odin / C).
+*.c                      @tarantula-org/core
+*.h                      @tarantula-org/core
+*.odin                   @tarantula-org/core
+Makefile                 @tarantula-org/core
+Dockerfile               @tarantula-org/core
 
-# 3. I/O Subsystem
-src/io/           @AKRiLLiCK
-include/camelot/io.h @AKRiLLiCK
+# --- STUDIO CREATIVE (Tier 2) ---
+# Game assets and high-level scripting.
+*.png                    @tarantula-org/studio
+*.blend                  @tarantula-org/studio
+*.glsl                   @tarantula-org/studio
+assets/                  @tarantula-org/studio
+docs/                    @tarantula-org/studio
 
-# 4. Build & Configuration
-Makefile          @AKRiLLiCK
-.github/          @AKRiLLiCK
+# --- SECURITY (Tier 3) ---
+# Vulnerability workflows.
+.github/workflows/       @tarantula-org/security @tarantula-org/steering
