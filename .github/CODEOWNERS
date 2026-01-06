@@ -1,0 +1,19 @@
+# Role Map
+## Avant Systems Canon (ASC-1.1)
+
+# 1. Memory Subsystem
+src/memory/       @AKRiLLiCK
+include/camelot/memory.h @AKRiLLiCK
+
+# 2. Data Structure Subsystem
+src/ds/           @AKRiLLiCK
+include/ds/       @AKRiLLiCK
+src/types/        @AKRiLLiCK
+
+# 3. I/O Subsystem
+src/io/           @AKRiLLiCK
+include/camelot/io.h @AKRiLLiCK
+
+# 4. Build & Configuration
+Makefile          @AKRiLLiCK
+.github/          @AKRiLLiCK
