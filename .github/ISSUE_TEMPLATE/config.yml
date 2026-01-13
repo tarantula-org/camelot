@@ -1,0 +1,9 @@
+# .github/ISSUE_TEMPLATE/config.yml
+blank_issues_enabled: false  # Prohibit generic "blank" issues. Force structure.
+contact_links:
+  - name: 💬 Tarantula Tech Discord
+    url: https://discord.gg/ndZdYbzVGP
+    about: "General questions, community networking, and proprietary support."
+  - name: 🔐 Security Vulnerability
+    url: https://github.com/tarantula-org/camelot/blob/main/SECURITY.md
+    about: "Strictly for reporting exploits or sensitive flaws."

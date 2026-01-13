@@ -1,0 +1,30 @@
+# .github/ISSUE_TEMPLATE/bug_report.yaml
+name: 🐛 Kernel Panic / Bug Report
+description: Report a reproducible failure in the Camelot framework.
+title: "[BUG]: "
+labels: ["fix", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **STOP.**
+        If this is a question, ask on Discord. Only file this if `make test` fails or the kernel crashes.
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction Steps
+      description: Provide the C code or Makefile command that triggers the failure.
+      placeholder: |
+        1. create arena...
+        2. push to list...
+        3. segfault.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Compiler version, and Architecture.
+      placeholder: "Ubuntu 24.04 / GCC 13.3 / x86_64"
+    validations:
+      required: true
