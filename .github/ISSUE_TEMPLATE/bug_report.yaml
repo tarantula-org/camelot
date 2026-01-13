@@ -1,4 +1,4 @@
-name: 🐛 Issue Report
+name: Issue Report
 description: Create a report for the Open Source Camelot Kernel.
 title: "[BUG]: "
 labels: ["fix", "needs-triage"]
