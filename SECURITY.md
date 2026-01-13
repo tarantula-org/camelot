@@ -23,7 +23,7 @@ We adhere to a strict semantic versioning policy for security patches.
 ### Direct Contact
 All security vulnerabilities must be reported directly to the Security Team via email.
 
-* **Email:** `security@tarantula.tech`
+* **Email:** `camelot.tarantula.tech@atomicmail.io`
 * **Subject:** `[SECURITY] <Project Name>: <Vulnerability Class>`
 
 ### Required Evidence
@@ -59,3 +59,4 @@ We pledge not to pursue legal action against researchers who adhere to these **R
 1. **Authorized Testing:** Research is conducted only on systems you own or have explicit permission to test.
 2. **Data Privacy:** No user data is compromised, exfiltrated, or destroyed during testing.
 3. **Non-Disclosure:** Vulnerability details are not published until a patch is released or the **90-day disclosure deadline** expires.
+
