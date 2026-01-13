@@ -1,6 +1,5 @@
-# .github/ISSUE_TEMPLATE/bug_report.yaml
-name: 🐛 Kernel Panic / Bug Report
-description: Report a reproducible failure in the Camelot framework.
+name: 🐛 Issue Report
+description: Create a report for the Open Source Camelot Kernel.
 title: "[BUG]: "
 labels: ["fix", "needs-triage"]
 body:
@@ -8,7 +7,7 @@ body:
     attributes:
       value: |
         **STOP.**
-        If this is a question, ask on Discord. Only file this if `make test` fails or the kernel crashes.
+        If this is regarding a proprietary game or closed-source tool, please go back and select "Proprietary Issue Report".
   - type: textarea
     id: reproduction
     attributes:
