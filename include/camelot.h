@@ -16,7 +16,7 @@ extern "C" {
 
 // --- VERSION ---
 // Format: Epoch.Major.Minor.Patch
-#define CAMELOT_VERSION "0.2.0.0"
+#define CAMELOT_VERSION "1.2.0.0"
 
 // --- MODULES ---
 #include "camelot/io.h"
