@@ -17,7 +17,7 @@ Replacing legacy paradigms with safe memory models and strict architectural inte
 
 ---
 
-## <img src="https://cdn.simpleicons.org/c/000000" width="24" style="vertical-align: middle;"> About
+## <img src="https://cdn.simpleicons.org/c" width="24" style="vertical-align: middle;"> About
 
 **The C language is fine. The standard library is the problem.**
 
@@ -38,7 +38,7 @@ You can get the library compiled and linked to your project in under a minute.
 
 ---
 
-## <img src="https://cdn.simpleicons.org/gitbook/000000" width="24" style="vertical-align: middle;"> Project Structure
+## <img src="https://cdn.simpleicons.org/gitbook" width="24" style="vertical-align: middle;"> Project Structure
 
 Camelot follows the **Avant Systems Canon (ASC-1.2)** to ensure maintainability.
 
@@ -48,7 +48,7 @@ The code is strictly separated into **Public API** (what you use) and **Internal
 
 ---
 
-## <img src="https://cdn.simpleicons.org/github/000000" width="24" style="vertical-align: middle;"> Roadmap
+## <img src="https://cdn.simpleicons.org/git" width="24" style="vertical-align: middle;"> Roadmap
 
 We are currently in **Epoch 2: Compatibility & Hardening**. Our focus is on achieving feature parity with necessary libc functions while maintaining our safety guarantees.
 
