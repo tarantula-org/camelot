@@ -3,7 +3,7 @@
 <img src="logo.svg" alt="Camelot Logo" width="180"/>
 
 # Camelot
-**A Modern Standard Library for C23.**
+**A Modern Standard Library for C**
 Replacing legacy paradigms with safe memory models and strict architectural integrity.
 
 [![License: MPL 2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg?logo=opensourceinitiative&logoColor=white)](LICENSE)
@@ -53,4 +53,5 @@ The code is strictly separated into **Public API** (what you use) and **Internal
 We are currently in **Epoch 2: Compatibility & Hardening**. Our focus is on achieving feature parity with necessary libc functions while maintaining our safety guarantees.
 
 **[View the Roadmap →](https://camelot-1.gitbook.io/docs/roadmap)**
+
 
