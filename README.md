@@ -8,7 +8,7 @@ A modern standard library replacement for C23 enforcing safety, ergonomics, and 
 
 [![License: MPL 2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg)](LICENSE)
 [![Standard: C23](https://img.shields.io/badge/standard-C23-purple.svg)](https://en.wikipedia.org/wiki/C23_(C_standard_revision))
-[![Compliance: ASC-1.1](https://img.shields.io/badge/Compliance-ASC--1.2-firebrick.svg)](CONTRIBUTING.md)
+[![Compliance: ASC-1.3](https://img.shields.io/badge/Compliance-ASC--1.3-firebrick.svg)](CONTRIBUTING.md)
 [![Documentation: GitBook](https://img.shields.io/badge/docs-GitBook-blue.svg)](https://camelot-1.gitbook.io/docs/)
 
 [**Quick Start**](https://camelot-1.gitbook.io/docs/start-here/quick-start) • [**Roadmap**](https://camelot-1.gitbook.io/docs/roadmap) • [**Contribute**](CONTRIBUTING.md)
