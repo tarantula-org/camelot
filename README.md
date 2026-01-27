@@ -6,10 +6,10 @@
 **A Modern Standard Library for C**
 Replacing legacy paradigms with safe memory models and strict architectural integrity.
 
-[![License: MPL 2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg?logo=opensourceinitiative&logoColor=white)](LICENSE)
-[![Standard: C23](https://img.shields.io/badge/standard-C23-purple.svg?logo=c&logoColor=white)](https://en.wikipedia.org/wiki/C23_(C_standard_revision))
-[![Compliance: ASC-1.2](https://img.shields.io/badge/Compliance-ASC--1.2-firebrick.svg?logo=checkmarx&logoColor=white)](CONTRIBUTING.md)
-[![Documentation: GitBook](https://img.shields.io/badge/docs-GitBook-blue.svg?logo=gitbook&logoColor=white)](https://camelot-1.gitbook.io/docs/)
+[![License: MPL 2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg?style=flat-square&logo=opensourceinitiative&logoColor=white)](LICENSE)
+[![Standard: C23](https://img.shields.io/badge/standard-C23-purple.svg?style=flat-square&logo=c&logoColor=white)](https://en.wikipedia.org/wiki/C23_(C_standard_revision))
+[![Compliance: ASC-1.2](https://img.shields.io/badge/Compliance-ASC--1.2-firebrick.svg?style=flat-square&logo=checkmarx&logoColor=white)](CONTRIBUTING.md)
+[![Documentation: GitBook](https://img.shields.io/badge/docs-GitBook-blue.svg?style=flat-square&logo=gitbook&logoColor=white)](https://camelot-1.gitbook.io/docs/)
 
 [**Quick Start**](https://camelot-1.gitbook.io/docs/start-here/quick-start) • [**Roadmap**](https://camelot-1.gitbook.io/docs/roadmap) • [**Contribute**](CONTRIBUTING.md)
 
@@ -53,5 +53,3 @@ The code is strictly separated into **Public API** (what you use) and **Internal
 We are currently in **Epoch 2: Compatibility & Hardening**. Our focus is on achieving feature parity with necessary libc functions while maintaining our safety guarantees.
 
 **[View the Roadmap →](https://camelot-1.gitbook.io/docs/roadmap)**
-
-
