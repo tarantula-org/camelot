@@ -40,4 +40,4 @@ The framework functions via four distinct, non-overlapping pillars:
 
 Camelot is a developer-first, source-available kernel. We do not ship pre-compiled binaries; you compile the framework directly alongside your project to ensure ABI compatibility and optimization.
 
-[![Read Quick Start](https://img.shields.io/badge/READ-QUICK_START-5a5d7c?style=for-the-badge&logo=gitbook&logoColor=white&labelColor=181717)](https://camelot-1.gitbook.io/docs/start-here/quick-start)
+[![Read Quick Start](https://img.shields.io/badge/READ-QUICK_START-5a5d7c?style=for-the-badge&logo=gitbook&logoColor=white&labelColor=181717)](https://camelot-1.gitbook.io/docs/documentation)
