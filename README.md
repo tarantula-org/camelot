@@ -1,55 +1,43 @@
 <div align="center">
 
-<img src="logo.svg" alt="Camelot Logo" width="180"/>
+  <img src="logo.svg" alt="Camelot Logo" width="200" />
 
-# Camelot
-**A Modern Standard Library for C**
-Replacing legacy paradigms with safe memory models and strict architectural integrity.
+  <br />
 
-[![License: MPL 2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg?style=flat-square&logo=opensourceinitiative&logoColor=white)](LICENSE)
-[![Standard: C23](https://img.shields.io/badge/standard-C23-purple.svg?style=flat-square&logo=c&logoColor=white)](https://en.wikipedia.org/wiki/C23_(C_standard_revision))
-[![Compliance: ASC-1.2](https://img.shields.io/badge/Compliance-ASC--1.2-firebrick.svg?style=flat-square&logo=checkmarx&logoColor=white)](CONTRIBUTING.md)
-[![Documentation: GitBook](https://img.shields.io/badge/docs-GitBook-blue.svg?style=flat-square&logo=gitbook&logoColor=white)](https://camelot-1.gitbook.io/docs/)
+  <h1>Camelot</h1>
+   
+  **The Senior Engineer's C Framework**
 
-[**Quick Start**](https://camelot-1.gitbook.io/docs/start-here/quick-start) • [**Roadmap**](https://camelot-1.gitbook.io/docs/roadmap) • [**Contribute**](CONTRIBUTING.md)
+  <br />
+  <br />
+
+  <img src="https://img.shields.io/badge/License-MPL_2.0-brightgreen?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="License" />
+  <img src="https://img.shields.io/badge/Standard-C23-purple?style=for-the-badge&logo=c&logoColor=white" alt="Standard" />
+  <img src="https://img.shields.io/badge/Compliance-ASC_1.2-firebrick?style=for-the-badge&logo=checkmarx&logoColor=white" alt="Compliance" />
 
 </div>
 
----
+<br />
 
-## <img src="https://cdn.simpleicons.org/c" width="24" style="vertical-align: middle;"> About
+## <img src="https://cdn.simpleicons.org/blueprint/5a5d7c" width="24" style="vertical-align: bottom;" /> Overview
 
-**The C language is fine. The standard library is the problem.**
+**Camelot** is a hardened standard library replacement for C23.
 
-Most bugs in C stem from the outdated design of `libc`—manual memory management (`malloc/free`), null-terminated string risks, and opaque error handling. Camelot is an opinionated framework designed to remove these foot-guns by enforcing modern systems engineering patterns at the core level.
+Engineered to eliminate the fragility of legacy `libc` paradigms, Camelot prioritizes memory safety, architectural rigor, and zero-cost abstractions. It serves as a foundational kernel for high-reliability software, replacing manual management with strict automated lifecycles. It is not merely a library, but a rigorous standard for the modern C systems engineer.
 
-We replace the standard library with a toolkit built on three pragmatic pillars:
+## <img src="https://cdn.simpleicons.org/polywork/5a5d7c" width="24" style="vertical-align: bottom;" /> Architecture
 
-1.  **Arena Memory (Workspaces):** We stop heap fragmentation by using scoped linear allocators. Memory is allocated in O(1) and cleaned up automatically when the scope ends (RAII).
-2.  **Immutable Views:** We avoid unnecessary data copying. Functions accept "views" (pointer + length) rather than owning raw buffers, making data processing zero-copy by default.
-3.  **Explicit Control:** We remove undefined behavior as a "feature." If an allocation fails or a bound is checked, the system handles it deterministically via strict Result types.
+The framework functions via four distinct, non-overlapping pillars:
 
-For a detailed breakdown of why we chose this architecture over Rust or C++, read our **[Design Philosophy](https://camelot-1.gitbook.io/docs/manifesto)**.
+| Component | Stack | Responsibility |
+| :--- | :--- | :--- |
+| **Memory Engine** | <img src="https://img.shields.io/badge/Arena-Allocator-96bf48?style=flat&logo=c&logoColor=white" height="20" /> | O(1) linear allocation (Workspaces) with automated RAII cleanup. |
+| **Data Layout** | <img src="https://img.shields.io/badge/Zero--Copy-Views-e5a50a?style=flat&logo=buffer&logoColor=white" height="20" /> | Immutable string views and slices to eliminate redundant copying. |
+| **Safety Protocol** | <img src="https://img.shields.io/badge/Result-Types-dea584?style=flat&logo=rust&logoColor=white" height="20" /> | Deterministic error handling and compiler-enforced state checks. |
+| **Build System** | <img src="https://img.shields.io/badge/Make-Dist-0082fc?style=flat&logo=gnu&logoColor=white" height="20" /> | Portable artifact generation and strict ASC-1.2 separation. |
 
-### ⚡ Getting Started
-You can get the library compiled and linked to your project in under a minute.
+## <img src="https://cdn.simpleicons.org/github/ffffff" width="24" style="vertical-align: bottom;" /> Integration
 
-**[Read the Quick Start Guide →](https://camelot-1.gitbook.io/docs/start-here/quick-start)**
+Camelot is a developer-first, source-available kernel. We do not ship pre-compiled binaries; you compile the framework directly alongside your project to ensure ABI compatibility and optimization.
 
----
-
-## <img src="https://cdn.simpleicons.org/gitbook" width="24" style="vertical-align: middle;"> Project Structure
-
-Camelot follows the **Avant Systems Canon (ASC-1.2)** to ensure maintainability.
-
-The code is strictly separated into **Public API** (what you use) and **Internal Implementation** (how it works). Before contributing, please review the directory topology to understand where your code belongs.
-
-**[Explore the Project Structure →](https://camelot-1.gitbook.io/docs/documentation/engineering/project-structure)**
-
----
-
-## <img src="https://cdn.simpleicons.org/git" width="24" style="vertical-align: middle;"> Roadmap
-
-We are currently in **Epoch 2: Compatibility & Hardening**. Our focus is on achieving feature parity with necessary libc functions while maintaining our safety guarantees.
-
-**[View the Roadmap →](https://camelot-1.gitbook.io/docs/roadmap)**
+[![Read Quick Start](https://img.shields.io/badge/READ-QUICK_START-5a5d7c?style=for-the-badge&logo=gitbook&logoColor=white&labelColor=181717)](https://camelot-1.gitbook.io/docs/start-here/quick-start)
