@@ -31,10 +31,10 @@ The framework functions via four distinct, non-overlapping pillars:
 
 | Component | Stack | Responsibility |
 | :--- | :--- | :--- |
-| **Memory Engine** | <img src="https://img.shields.io/badge/Arena-Allocator-96bf48?style=flat&logo=c&logoColor=white" height="20" /> | O(1) linear allocation (Workspaces) with automated RAII cleanup. |
-| **Data Layout** | <img src="https://img.shields.io/badge/Zero--Copy-Views-e5a50a?style=flat&logo=buffer&logoColor=white" height="20" /> | Immutable string views and slices to eliminate redundant copying. |
-| **Safety Protocol** | <img src="https://img.shields.io/badge/Result-Types-dea584?style=flat&logo=rust&logoColor=white" height="20" /> | Deterministic error handling and compiler-enforced state checks. |
-| **Build System** | <img src="https://img.shields.io/badge/Make-Dist-0082fc?style=flat&logo=gnu&logoColor=white" height="20" /> | Portable artifact generation and strict ASC-1.2 separation. |
+| **Memory Engine** | <img src="https://img.shields.io/badge/Arena_Allocator-96bf48?style=flat&logo=c&logoColor=white&labelColor=96bf48" height="20" /> | O(1) linear allocation (Workspaces) with automated RAII cleanup. |
+| **Data Layout** | <img src="https://img.shields.io/badge/Zero--Copy_Views-e5a50a?style=flat&logo=buffer&logoColor=white&labelColor=e5a50a" height="20" /> | Immutable string views and slices to eliminate redundant copying. |
+| **Safety Protocol** | <img src="https://img.shields.io/badge/Result_Types-dea584?style=flat&logo=rust&logoColor=white&labelColor=dea584" height="20" /> | Deterministic error handling and compiler-enforced state checks. |
+| **Build System** | <img src="https://img.shields.io/badge/Make_Dist-0082fc?style=flat&logo=gnu&logoColor=white&labelColor=0082fc" height="20" /> | Portable artifact generation and strict ASC-1.2 separation. |
 
 ## <img src="https://cdn.simpleicons.org/github/ffffff" width="24" style="vertical-align: bottom;" /> Integration
 
