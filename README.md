@@ -1,67 +1,43 @@
 <div align="center">
 
-<img src="logo.svg" alt="Camelot Logo" width="180"/>
+  <img src="logo.svg" alt="Camelot Logo" width="200" />
 
-# Camelot
-**The Senior Engineer's C Framework.**
-A modern standard library replacement for C23 enforcing safety, ergonomics, and architectural integrity.
+  <br />
 
-[![License: MPL 2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg)](LICENSE)
-[![Standard: C23](https://img.shields.io/badge/standard-C23-purple.svg)](https://en.wikipedia.org/wiki/C23_(C_standard_revision))
-[![Compliance: ASC-1.3](https://img.shields.io/badge/Compliance-ASC--1.3-firebrick.svg)](CONTRIBUTING.md)
-[![Documentation: GitBook](https://img.shields.io/badge/docs-GitBook-blue.svg)](https://camelot-1.gitbook.io/docs/)
+  <h1>Camelot</h1>
+   
+  **The Senior Engineer's C Framework**
 
-[**Quick Start**](https://camelot-1.gitbook.io/docs/start-here/quick-start) • [**Roadmap**](https://camelot-1.gitbook.io/docs/roadmap) • [**Contribute**](CONTRIBUTING.md)
+  <br />
+  <br />
+
+  <img src="https://img.shields.io/badge/License-MPL_2.0-brightgreen?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="License" />
+  <img src="https://img.shields.io/badge/Standard-C23-purple?style=for-the-badge&logo=c&logoColor=white" alt="Standard" />
+  <img src="https://img.shields.io/badge/Compliance-ASC_1.2-firebrick?style=for-the-badge&logo=checkmarx&logoColor=white" alt="Compliance" />
 
 </div>
 
----
+<br />
 
-## Mission
+## <img src="https://cdn.simpleicons.org/blueprint/5a5d7c" width="24" style="vertical-align: bottom;" /> Overview
 
-**"C is legacy."** We reject this statement.
+**Camelot** is a hardened standard library replacement for C23.
 
-The problem isn't the language; it is the **Standard Library**. Camelot bridges the gap by bringing modern systems engineering concepts into the raw power of C:
+Engineered to eliminate the fragility of legacy `libc` paradigms, Camelot prioritizes memory safety, architectural rigor, and zero-cost abstractions. It serves as a foundational kernel for high-reliability software, replacing manual management with strict automated lifecycles. It is not merely a library, but a rigorous standard for the modern C systems engineer.
 
-1.  **Workspaces, not Malloc:** Memory is managed in scopes (Arenas), not individual pointers.
-2.  **Views, not Copies:** Data is immutable and shared by default.
-3.  **Transparency:** No hidden allocations. No magic.
+## <img src="https://cdn.simpleicons.org/polywork/5a5d7c" width="24" style="vertical-align: bottom;" /> Architecture
 
----
+The framework functions via four distinct, non-overlapping pillars:
 
-## Getting Started
+| Component | Stack | Responsibility |
+| :--- | :--- | :--- |
+| **Memory Engine** | <img src="https://img.shields.io/badge/Arena_Allocator-96bf48?style=flat&logo=c&logoColor=white&labelColor=96bf48" height="20" /> | O(1) linear allocation (Workspaces) with automated RAII cleanup. |
+| **Data Layout** | <img src="https://img.shields.io/badge/Zero--Copy_Views-e5a50a?style=flat&logo=buffer&logoColor=white&labelColor=e5a50a" height="20" /> | Immutable string views and slices to eliminate redundant copying. |
+| **Safety Protocol** | <img src="https://img.shields.io/badge/Result_Types-dea584?style=flat&logo=rust&logoColor=white&labelColor=dea584" height="20" /> | Deterministic error handling and compiler-enforced state checks. |
+| **Build System** | <img src="https://img.shields.io/badge/Make_Dist-0082fc?style=flat&logo=gnu&logoColor=white&labelColor=0082fc" height="20" /> | Portable artifact generation and strict ASC-1.2 separation. |
 
-We provide a comprehensive guide to get you from zero to a running kernel in 30 seconds.
+## <img src="https://cdn.simpleicons.org/github/ffffff" width="24" style="vertical-align: bottom;" /> Integration
 
-**[Read the Quick Start Guide](https://camelot-1.gitbook.io/docs/start-here/quick-start)**
+Camelot is a developer-first, source-available kernel. We do not ship pre-compiled binaries; you compile the framework directly alongside your project to ensure ABI compatibility and optimization.
 
----
-
-## Manifesto
-
-**"Why still use C?"**
-
-It is the industry's favorite question. The answer is not nostalgia; it is architectural necessity. We have compiled a comprehensive technical defense of C, dismantling the "Legacy" myth with architectural proofs.
-
-**[Read the Full Manifesto](https://camelot-1.gitbook.io/docs/manifesto)**
-
----
-
-## Roadmap
-
-We follow a strict, layered architectural progression (Epochs).
-
-**[View the Roadmap](https://camelot-1.gitbook.io/docs/roadmap)**
-
----
-
-## Structure
-
-```text
-Camelot/
-├── include/       # Public Interface
-├── src/           # Internal Engine
-├── tests/         # Unit Test Suite
-├── packages/      # Build Artifacts
-└── Makefile       # Build Automation
-```
+[![Read Quick Start](https://img.shields.io/badge/READ-QUICK_START-5a5d7c?style=for-the-badge&logo=gitbook&logoColor=white&labelColor=181717)](https://camelot-1.gitbook.io/docs/documentation)
