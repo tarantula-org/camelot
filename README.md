@@ -13,7 +13,7 @@
 
   <img src="https://img.shields.io/badge/License-MPL_2.0-brightgreen?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="License" />
   <img src="https://img.shields.io/badge/Standard-C23-purple?style=for-the-badge&logo=c&logoColor=white" alt="Standard" />
-  <img src="https://img.shields.io/badge/Compliance-ASC_1.2-firebrick?style=for-the-badge&logo=checkmarx&logoColor=white" alt="Compliance" />
+  <img src="https://img.shields.io/badge/Compliance-ASC_1.3-firebrick?style=for-the-badge&logo=checkmarx&logoColor=white" alt="Compliance" />
 
 </div>
 
