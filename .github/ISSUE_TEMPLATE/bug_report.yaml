@@ -1,13 +1,8 @@
-name: Issue Report
-description: Create a report for the Open Source Camelot Kernel.
+name: Bug Report
+description: Create a report for the Camelot Kernel.
 title: "[BUG]: "
 labels: ["fix", "needs-triage"]
 body:
-  - type: markdown
-    attributes:
-      value: |
-        **STOP.**
-        If this is regarding a proprietary game or closed-source tool, please go back and select "Proprietary Issue Report".
   - type: textarea
     id: reproduction
     attributes:
