@@ -3,7 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * Governed by the Avant Systems Canon (ASC-1.2).
+ * Governed by the Avant Systems Canon (ASC-1.3).
  * Compliance is mandatory for all contributions.
  */
 
@@ -23,7 +23,6 @@ static Arena internal_create(u64 size) {
 		return (Arena){.status = OOM};
 	}
 
-	// Zero out immediately for security
 	memset(mem, 0, size);
 
 	return (Arena){
@@ -44,7 +43,6 @@ static void internal_release(Arena *a) {
 }
 
 static void internal_clear(Arena *a) {
-	// SECURITY: Null the memory as requested before resetting cursor
 	if (a->buf && a->len > 0) {
 		memset(a->buf, 0, a->len);
 	}
@@ -56,6 +54,7 @@ static void *internal_alloc(Arena *a, u64 size) {
 		return NULL;
 
 	uintptr_t address = (uintptr_t)a->buf + a->len;
+
 	// 8-byte alignment
 	u64 padding = (8 - (address % 8)) % 8;
 

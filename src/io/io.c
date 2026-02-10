@@ -3,7 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * Governed by the Avant Systems Canon (ASC-1.2).
+ * Governed by the Avant Systems Canon (ASC-1.3).
  * Compliance is mandatory for all contributions.
  */
 
@@ -45,7 +45,7 @@ String scan(Arena *a, u64 cap) {
 			break;
 		}
 		if (c == '\r') {
-			continue; // Ignore CR
+			continue;
 		}
 
 		buf[count++] = c;

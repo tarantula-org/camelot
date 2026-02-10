@@ -3,7 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * Governed by the Avant Systems Canon (ASC-1.2).
+ * Governed by the Avant Systems Canon (ASC-1.3).
  * Compliance is mandatory for all contributions.
  */
 
@@ -18,9 +18,6 @@ extern "C" {
 
 #define PAGE_SIZE 256
 
-// A Paged Dynamic Array.
-// Ensures O(1) pointer stability (pointers to elements never invalidate).
-// Grows automatically by allocating new pages from the source Arena.
 typedef struct {
 	Arena *source;
 	void **pages;

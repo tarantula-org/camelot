@@ -3,7 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * Governed by the Avant Systems Canon (ASC-1.2).
+ * Governed by the Avant Systems Canon (ASC-1.3).
  * Compliance is mandatory for all contributions.
  */
 
@@ -16,8 +16,6 @@ extern "C" {
 
 #include "types/primitives.h"
 
-// The raw Linear Allocator struct.
-// Represents a borrowing reference to a memory context.
 typedef struct {
 	u8 *buf;
 	u64 len;
@@ -25,7 +23,6 @@ typedef struct {
 	Result status;
 } Arena;
 
-// A scoped, owning Arena that cleans itself up automatically.
 static inline void _cleanup_arena_func(Arena *a);
 #define Workspace __attribute__((cleanup(_cleanup_arena_func))) Arena
 
@@ -79,7 +76,6 @@ typedef struct {
 
 extern const ArenaNamespace arena;
 
-// Internal Cleanup Helper
 static inline void _cleanup_arena_func(Arena *a) {
 	if (a && a->buf)
 		arena.release(a);
