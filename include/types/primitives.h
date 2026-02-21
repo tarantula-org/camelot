@@ -36,8 +36,8 @@ typedef double f64;
 
 typedef enum {
 	OK = 0,
-	OOM,
-	OOB,
+	OUT_OF_MEMORY,
+	OUT_OF_BOUNDS,
 	INVALID_KEY,
 	FILE_NOT_FOUND,
 	IO_ERROR,

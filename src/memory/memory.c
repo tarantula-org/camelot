@@ -20,7 +20,7 @@
 static Arena internal_create(u64 size) {
 	void *mem = malloc(size);
 	if (!mem) {
-		return (Arena){.status = OOM};
+		return (Arena){.status = OUT_OF_MEMORY};
 	}
 
 	memset(mem, 0, size);
@@ -59,7 +59,7 @@ static void *internal_alloc(Arena *a, u64 size) {
 	u64 padding = (8 - (address % 8)) % 8;
 
 	if (a->len + padding + size > a->cap) {
-		a->status = OOM;
+		a->status = OUT_OF_MEMORY;
 		return NULL;
 	}
 
