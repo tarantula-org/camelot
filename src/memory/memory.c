@@ -1,21 +1,21 @@
-/*
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Governed by the Avant Systems Canon (ASC-1.3).
- * Compliance is mandatory for all contributions.
- */
+ /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * This Source Code Form is subject to the terms of the Mozilla Public	*
+ * License, v. 2.0. If a copy of the MPL was not distributed with this	*
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.				*
+ *																		*
+ * Governed by the Avant Systems Canon (ASC-1.3).						*
+ * Compliance is mandatory for all contributions.						*
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 #define ALLOW_UNSAFE
 
-// clang-format off
+/* clang-format off */
 #include <stdlib.h>
 #include <string.h>
 #include "camelot.h"
-// clang-format on
+/* clang-format on */
 
-// --- INTERNAL IMPLEMENTATION ---
+/* --- INTERNAL IMPLEMENTATION --- */
 
 static Arena internal_create(u64 size) {
 	void *mem = malloc(size);
@@ -25,7 +25,7 @@ static Arena internal_create(u64 size) {
 
 	memset(mem, 0, size);
 
-	return (Arena){
+	return (Arena) {
 		.buf = (u8 *)mem,
 		.cap = size,
 		.len = 0,
@@ -69,7 +69,7 @@ static void *internal_alloc(Arena *a, u64 size) {
 	return p;
 }
 
-// --- NAMESPACE ---
+/* --- NAMESPACE --- */
 
 const ArenaNamespace arena = {
 	.create = internal_create,

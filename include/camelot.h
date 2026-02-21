@@ -19,12 +19,8 @@ extern "C" {
 #define CAMELOT_VERSION "1.2.0.0"
 
 // --- MODULES ---
-#include "camelot/io.h"
 #include "camelot/memory.h"
-#include "ds/list.h"
-#include "ds/table.h"
 #include "types/primitives.h"
-#include "types/string.h"
 
 // --- SAFETY ENFORCEMENT ---
 // By default, we poison standard libc allocation/string functions
