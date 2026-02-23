@@ -4,10 +4,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "camelot.h"
-#include "tests.h"
 #include <stdio.h>
 #include <string.h>
+#include "camelot.h"
+#include "tests.h"
 
 static void setup_file(const char *name, const char *content) {
 	FILE *f = fopen(name, "wb");

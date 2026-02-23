@@ -4,12 +4,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "camelot.h"
-#include "tests.h"
-#include <fcntl.h> // open, O_RDONLY
+#include <fcntl.h>  // open, O_RDONLY
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h> // close
+#include "camelot.h"
+#include "tests.h"
 
 // --- HELPERS (For Scan Tests) ---
 
@@ -127,5 +127,5 @@ TEST(test_io_visual) {
 void test_io() {
 	RUN(test_scan_basic);
 	RUN(test_scan_limited);
-	// RUN(test_io_visual); // Optional: Uncomment to see output
+	RUN(test_io_visual);
 }
