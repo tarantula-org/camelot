@@ -4,11 +4,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-// clang-format off
 #include <string.h>
+
 #include "camelot.h"
 #include "tests.h"
-// clang-format on
 
 TEST(test_string_construction) {
 	// 1. Manual

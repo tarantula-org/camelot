@@ -7,8 +7,9 @@
 #ifndef TESTS_H
 #define TESTS_H
 
-#include "camelot.h"
 #include <stdio.h>
+
+#include "camelot.h"
 
 #define ALLOW_UNSAFE
 

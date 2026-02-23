@@ -13,7 +13,7 @@ extern void test_files();
 extern void test_ds();
 
 int main() {
-	printf("\n[ASC-1.3] RUNNING VERIFICATION SUITE\n");
+	printf("\n[CAMELOT] RUNNING VERIFICATION SUITE\n");
 	printf("--------------------------------------\n");
 
 	test_types();

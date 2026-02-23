@@ -4,9 +4,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+#include <stdint.h>
+
 #include "camelot.h"
 #include "tests.h"
-#include <stdint.h>
 
 TEST(test_alignment) {
 	Arena a = arena.create(1024);
@@ -38,18 +39,12 @@ TEST(test_oom) {
 }
 
 TEST(test_workspace_macro) {
-	// Verifies that the 'Workspace' syntax compiles and runs.
-	// If the cleanup logic was broken, this might segfault on scope exit.
 	{
 		Workspace a = arena.create(256);
 		REQUIRE(a.cap == 256);
-
-		void *p = arena.alloc(&a, 10);
-		REQUIRE(p != NULL);
-		// 'a' is automatically released here via __attribute__((cleanup))
+		void *mem = arena.alloc(&a, 100);
+		REQUIRE(mem != NULL);
 	}
-
-	// If we survived the block exit...
 }
 
 void test_memory() {
