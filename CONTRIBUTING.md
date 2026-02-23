@@ -1,103 +1,35 @@
-# Avant Systems Canon (ASC-1.3)
+# Contributing to Camelot
 
----
+This is the contribution guide for developers wanting to help build the Camelot standard library replacement.
 
-## 1. UNIVERSAL APPLICABILITY
-The Canon governs by **Architectural Role**, not by language-specific syntax. It ensures that systems remain deterministic, manageable, and performant regardless of the underlying technology.
+## 1. Technical Contract
+Camelot enforces strict architectural boundaries. Contributions that violate these constraints will be rejected at the PR level.
 
-### 1.1 Role Mapping
-* **Adoption Requirement:** Stewardship of the source tree is defined strictly by a standardized ownership definition file (specifically `CODEOWNERS`). This file serves as the authoritative map of Architectural Roles.
-* **Enforcement:** Every directory in the source tree **MUST** be owned by a specific Role, Team, or Maintainer defined in `CODEOWNERS`. Orphaned code is prohibited.
-* **Governance Rule:** Physical directory structures are implementation details; the Canon governs behavior based on a component's Role as defined in the ownership map.
+* **Memory Sovereignty:** Direct calls to `malloc`, `calloc`, `realloc`, or `free` are prohibited (they are poisoned at the compiler level). All allocations must be scoped to an `Arena` or `Workspace`.
+* **RAII Scoping:** Use the provided `__attribute__((cleanup))` macro wrappers for all local Workspaces to ensure automatic memory release.
+* **String Views:** Do not use null-terminated strings for internal logic. All string operations must utilize the `String` (ptr + len) view type.
+* **Error Values:** Every fallible operation must return a `Result` enum. Silent failures or global error states are prohibited.
+* **Namespacing:** Expose public functions via `const struct` subsets (e.g., `io.print`, `string.from`).
 
-### 1.2 Single Source of Truth (SSoT)
-* **The Law:** Information (constants, logic, configuration) must reside in exactly one location. Redundancy is a violation of architectural integrity.
+## 2. Repository Lifecycle
 
----
+### Making Commits
+* **Sign-off your commits** ([Git flag `-s`](https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---signoff)). We use the [Developer Certificate of Origin (DCO)](https://developercertificate.org/) in place of a heavy CLA. By signing off, you certify that you have the right to submit the code under the project's license.
+* **Sign commits** cryptographically where possible ([Learn more](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits)).
+* **Conventional Commits:** Use the [Conventional Commit style](https://www.conventionalcommits.org/en/v1.0.0-beta.2/) for all commit messages (`feat:`, `fix:`, `refactor:`, `perf:`).
+* **Formatting:** Run the code through `.clang-format` before committing. The CI pipeline will automatically reject styling violations.
+* **Atomicity:** Keep each PR bound to a single feature, architectural change, or bug fix. This prevents PRs from getting stuck in review limbo.
 
-## 2. THE STABILITY MANDATE
-**Objective: Zero Maintenance.**
+### Merging Pull Requests
+All PR titles must use Conventional Commit style. We enforce **squash merging** to keep the `main` branch history linear and readable. 
 
-The Canon prioritizes **perfect** over **done**. The goal is to reduce future maintenance burden to zero.
+## 3. What can I help with?
 
-* **Architecture Before Implementation:** We reject the philosophy of "Move fast and break things". Code is written once but read and maintained a thousand times. If a feature requires future maintenance to keep it working, it is technically insolvent.
-* **The Definition of Done:** A feature is not "done" when it passes tests; it is done when it is structurally optimal. We do not defer refactoring. Technical debt is treated as a critical build failure.
-* **Correctness Over Velocity:** It is better to delay a release than to ship an API that requires a breaking change later.
+The main project board serves as the starting point for all development:
 
----
+1. **The Tarantula Master Plan:** Check the GitHub Projects tab for active development columns.
+2. **Backlog & Free Issues:** Look for issues tagged with `needs-triage` or `enhancement`. These are generally free to pick up.
+3. **Strategic Roadmap (`[PLAN]` tags):** Issues marked as Roadmap Directives are prioritized architectural goals. Please comment on the issue before beginning work to ensure your implementation plan aligns with the Steering Committee's constraints.
+4. **Proposing Features (`[RFC]` tags):** If you are suggesting a new feature, open a Feature Request issue first. We prioritize keeping the dependency budget at zero; abstractions built solely for hypothetical future use cases will be declined.
 
-## 3. DEVELOPMENT WORKFLOW
-Integrity is maintained through a strict, linear progression of state.
-
-* **Atomic Contributions:** Changes must be scoped to a single logical improvement.
-* **Verification:** Contributions are invalid until verified by the local automated test suite (e.g., `make test` or equivalent).
-* **The Automaton:** All submissions are subject to machine-led verification (CI/CD). Human review is a secondary check for intent, never a primary check for syntax or hygiene.
-* **Chain of Command:** Reviews must follow the authority defined in `CODEOWNERS`.
-
----
-
-## 4. ENGINEERING STANDARDS
-* **Naming:** Use consistent, language-idiomatic casing.
-* **Immutability:** Data not intended for modification **MUST** be marked immutable at the API boundary.
-* **State Isolation:** Global mutable state is **PROHIBITED**. State must be passed explicitly to ensure thread safety and deterministic testing.
-
----
-
-## 5. COMMUNICATION & MESSAGING
-We utilize **Conventional Commits** to ensure the history of the system is machine-readable and logically structured.
-
-* `feat:` (New functionality)
-* `fix:` (Correcting erroneous behavior)
-* `refactor:` (Structural changes without functional impact)
-* `perf:` (Optimization of resource usage)
-* `docs:` (Documentation updates)
-
----
-
-## 6. SOURCE HYGIENE & TOPOLOGY
-Hygiene is strictly enforced to prevent logical collisions and "poisoning" of the system environment.
-
-### 6.1 Hierarchy of Inclusion
-To preserve safety boundaries, source files **MUST** follow a strict dependency order:
-1.  **Directives:** Local overrides and permission flags.
-2.  **External Dependencies:** Provided by the System, Language Standard, or Third-Party Packages.
-3.  **Internal Project Headers:** Internal definitions and safety enforcement.
-
-### 6.2 The Automaton Rule (Formatting)
-Code style is a deterministic output of a machine, not a matter of opinion.
-* **Authority:** The repository’s configuration file (e.g., `.clang-format`, `.prettierrc`, `fmt`) is the absolute authority.
-* **CI Enforcement:** Contributions with formatting violations **MUST** be automatically rejected.
-
-### 6.3 Documentation as Code
-* **The Law:** A feature is not "implemented" until its public interface is documented in-source. Documentation must evolve at the same velocity as the logic.
-
----
-
-## 7. SAFETY & ERROR PHILOSOPHY
-
-### 7.1 The "Unsafe" Hatch
-Direct interaction with memory-unsafe or undefined-behavior regions is prohibited in Application-level roles.
-* **Authorization:** Subsystems requiring unsafe access must explicitly declare intent via a language-appropriate directive (e.g., `unsafe`, `ALLOW_UNSAFE`).
-* **Scope:** This declaration **MUST** be localized to the smallest possible scope.
-
-### 7.2 Error Handling
-* **The Law:** Errors are **values**, not side-effects. Exceptions are discouraged unless the language lacks value-based error handling. If an operation can fail, that failure must be explicitly represented in the return signature to force handling by the caller.
-
-### 7.3 Linter Exemptions
-Disabling the Automaton (Formatting) is permitted **only** in specific blocks where manual alignment significantly improves structural clarity (e.g., Matrix math or ASCII diagrams).
-* **Syntax:** Use explicit markers (e.g., `// format off`).
-
----
-
-## 8. SECURITY PROTOCOLS
-* **Reporting:** Vulnerabilities must be reported privately via the channels defined in the project's security policy. Public disclosure of exploits without responsible notice is a violation of the Canon.
-* **Threat Model:** The "Safe" subset of the API guarantees integrity; "Unsafe" hatches do not. Reports must demonstrate a violation of the Safe API guarantees.
-
----
-
-## 9. INTELLECTUAL PROPERTY & LICENSING
-By contributing to a project governed by this Canon, the contributor agrees to the licensing terms defined in the root of the specific project.
-
----
-
-**Avant Systems Canon (ASC-1.3).** *Released into the Public Domain.*
+Any work on issues marked for future milestones may conflict with ongoing core architectural changes. Please stick to the current active milestone.

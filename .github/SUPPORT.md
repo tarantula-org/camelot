@@ -5,7 +5,7 @@ To maintain efficient triage, please adhere to the following routing.
 ### 1. Camelot Bug Reports & Features (Open Source)
 **Platform:** GitHub Issues
 * **Bugs:** If the kernel panics, leaks memory, or fails a test on `main`.
-* **Features:** If you are proposing an RFC compliant with **ASC-1.2**.
+* **Features:** If you are proposing an RFC.
 * **[Open an Issue](https://github.com/tarantula-org/camelot/issues/new)**
 
 ### 2. Security Vulnerabilities

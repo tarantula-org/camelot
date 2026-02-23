@@ -2,19 +2,14 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Governed by the Avant Systems Canon (ASC-1.3).
- * Compliance is mandatory for all contributions.
- */
+*/
 
-// clang-format off
 #include <fcntl.h> // open, O_RDONLY
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h> // close
 #include "camelot.h"
 #include "tests.h"
-// clang-format on
 
 // --- HELPERS (For Scan Tests) ---
 

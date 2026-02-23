@@ -7,7 +7,7 @@ body:
     attributes:
       value: |
         **Technical Constraint Check:**
-        Features must align with the "Zero Allocation" and "Arena-First" philosophy.
+        Features must align with the "Zero Allocation" and "Arena-First" memory models.
   - type: textarea
     id: pitch
     attributes:
