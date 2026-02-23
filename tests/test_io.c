@@ -2,14 +2,14 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
-*/
+ */
 
+#include "camelot.h"
+#include "tests.h"
 #include <fcntl.h> // open, O_RDONLY
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h> // close
-#include "camelot.h"
-#include "tests.h"
 
 // --- HELPERS (For Scan Tests) ---
 
