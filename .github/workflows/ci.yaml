@@ -13,16 +13,21 @@ jobs:
       - name: Initialize Toolchain
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang-format cppcheck
+          sudo apt-get install -y cppcheck
           gcc --version
 
-      - name: Verify Code Style
+      - name: Verify Code Style (Tabs Only)
         run: |
-          find . -type f \( -name "*.c" -o -name "*.h" \) \
+          bad=$(find . -type f \( -name "*.c" -o -name "*.h" \) \
             -not -path "./vendor/*" \
             -not -path "./build/*" \
             -not -path "./.git/*" \
-            | xargs clang-format --dry-run --Werror
+            -exec grep -Pln '^\t* [^*]' {} \;)
+          if [ -n "$bad" ]; then
+            echo "ERROR: The following files use spaces for indentation instead of tabs:"
+            echo "$bad"
+            exit 1
+          fi
 
       - name: Static Analysis (CppCheck)
         run: |

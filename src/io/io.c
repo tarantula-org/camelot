@@ -9,7 +9,7 @@
 #endif
 
 #include <stdarg.h> // va_list, va_start, va_end
-#include <stdio.h>  // snprintf
+#include <stdio.h>	// snprintf
 #include <string.h> // strlen
 #include <unistd.h> // write, read
 #include "camelot.h"
