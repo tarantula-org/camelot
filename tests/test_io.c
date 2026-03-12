@@ -93,7 +93,7 @@ TEST(test_io_visual) {
 	io.print("    Allocated int      : %i (Used %i bytes)\n", *num, (int)scratch.len);
 
 	// 4. DATA STRUCTURES (List)
-	io.print("\n[4] PAGED LIST\n");
+	io.print("\n[4] LINKED LIST\n");
 	List l = list.create(&scratch, sizeof(int));
 	for (int i = 1; i <= 3; i++) {
 		int val = i * 10;

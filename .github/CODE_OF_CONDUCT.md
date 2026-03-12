@@ -1,7 +1,5 @@
 # Code of Conduct
 
-**Authority:** Avant Systems Canon (ASC-1.2)
-
 This repository is a workspace for high-performance systems engineering. We value technical rigor, direct communication, and architectural integrity.
 
 ### Standards

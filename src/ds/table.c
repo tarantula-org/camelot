@@ -4,12 +4,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-// clang-format off
 #include <string.h>
 #include "camelot.h"
-// clang-format on
 
 // --- CONSTANTS ---
+
 #define FNV_OFFSET_BASIS 0xcbf29ce484222325
 #define FNV_PRIME 0x100000001b3
 

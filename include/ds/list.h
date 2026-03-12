@@ -13,13 +13,16 @@ extern "C" {
 
 #include "camelot/memory.h"
 
-#define PAGE_SIZE 256
+struct ListNode {
+	struct ListNode *next;
+	struct ListNode *prev;
+	unsigned char data[];
+};
 
 typedef struct {
 	Arena *source;
-	void **pages;
-	u64 pages_cap;
-	u64 pages_len;
+	struct ListNode *head;
+	struct ListNode *tail;
 	u64 item_size;
 	u64 count;
 } List;

@@ -36,7 +36,7 @@ TEST(test_paged_list) {
 
 	REQUIRE(new_val1 != NULL);
 	if (new_val1) {
-		REQUIRE(*new_val1 == 299);
+		REQUIRE(*new_val1 == 11);
 	}
 	REQUIRE(nums.count == 299);
 

@@ -1,28 +1,14 @@
-# Tarantula Tech Governance
-# Governed by Avant Systems Canon (ASC-1.2)
-
-# --- THE DIRECTORATE (Tier 0) ---
-# Strategic control.
 /SECURITY.md             @tarantula-org/steering
 /CONTRIBUTING.md         @tarantula-org/steering
 /.github/                @tarantula-org/steering
-
-# --- CORE SYSTEMS (Tier 1) ---
-# Low-level engineering (Odin / C).
 *.c                      @tarantula-org/core
 *.h                      @tarantula-org/core
 *.odin                   @tarantula-org/core
 Makefile                 @tarantula-org/core
 Dockerfile               @tarantula-org/core
-
-# --- STUDIO CREATIVE (Tier 2) ---
-# Game assets and high-level scripting.
 *.png                    @tarantula-org/studio
 *.blend                  @tarantula-org/studio
 *.glsl                   @tarantula-org/studio
 assets/                  @tarantula-org/studio
 docs/                    @tarantula-org/studio
-
-# --- SECURITY (Tier 3) ---
-# Vulnerability workflows.
 .github/workflows/       @tarantula-org/security @tarantula-org/steering

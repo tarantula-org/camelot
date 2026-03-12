@@ -4,12 +4,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-// clang-format off
+
 #include <stdio.h>
 #include "camelot.h"
-// clang-format on
 
 // --- EXTERNAL LINKAGE ---
+
 extern String scan(Arena *a, u64 cap);
 extern void put(String s);
 extern void print(const char *fmt, ...);
