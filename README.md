@@ -6,14 +6,13 @@
 
   <h1>Camelot</h1>
    
-  **The Senior Engineer's C Framework**
+  **A C Standard Library Framework**
 
   <br />
   <br />
 
   <img src="https://img.shields.io/badge/License-MPL_2.0-brightgreen?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="License" />
   <img src="https://img.shields.io/badge/Standard-C23-purple?style=for-the-badge&logo=c&logoColor=white" alt="Standard" />
-  <img src="https://img.shields.io/badge/Compliance-ASC_1.3-firebrick?style=for-the-badge&logo=checkmarx&logoColor=white" alt="Compliance" />
 
 </div>
 
@@ -21,23 +20,21 @@
 
 ## <img src="https://cdn.simpleicons.org/blueprint/5a5d7c" width="24" style="vertical-align: bottom;" /> Overview
 
-**Camelot** is a hardened standard library replacement for C23.
+C remains the foundational language for systems engineering due to its minimal runtime, predictable performance, and strict ABI stability. However, the legacy `libc` ecosystem lacks modern safety paradigms, often forcing developers to adopt C++ to manage complexity at scale.
 
-Engineered to eliminate the fragility of legacy `libc` paradigms, Camelot prioritizes memory safety, architectural rigor, and zero-cost abstractions. It serves as a foundational kernel for high-reliability software, replacing manual management with strict automated lifecycles. It is not merely a library, but a rigorous standard for the modern C systems engineer.
+**Camelot** is a standard library replacement built to bridge this gap. It implements the structural guarantees typically sought in higher-level languages—such as RAII, explicit error handling, and safe memory lifetimes—natively within C23. Our goal is to make C a rigorous, viable choice for modern large-scale projects.
 
 ## <img src="https://cdn.simpleicons.org/polywork/5a5d7c" width="24" style="vertical-align: bottom;" /> Architecture
 
-The framework functions via four distinct, non-overlapping pillars:
+The framework functions via four distinct components designed for deterministic execution:
 
 | Component | Stack | Responsibility |
 | :--- | :--- | :--- |
-| **Memory Engine** | <img src="https://img.shields.io/badge/Arena_Allocator-96bf48?style=flat&logo=c&logoColor=white&labelColor=96bf48" height="20" /> | O(1) linear allocation (Workspaces) with automated RAII cleanup. |
-| **Data Layout** | <img src="https://img.shields.io/badge/Zero--Copy_Views-e5a50a?style=flat&logo=buffer&logoColor=white&labelColor=e5a50a" height="20" /> | Immutable string views and slices to eliminate redundant copying. |
-| **Safety Protocol** | <img src="https://img.shields.io/badge/Result_Types-dea584?style=flat&logo=rust&logoColor=white&labelColor=dea584" height="20" /> | Deterministic error handling and compiler-enforced state checks. |
-| **Build System** | <img src="https://img.shields.io/badge/Make_Dist-0082fc?style=flat&logo=gnu&logoColor=white&labelColor=0082fc" height="20" /> | Portable artifact generation and strict ASC-1.2 separation. |
+| **Memory Engine** | <img src="https://img.shields.io/badge/Arena_Allocator-96bf48?style=flat&logo=c&logoColor=white&labelColor=96bf48" height="20" /> | O(1) linear allocation (Workspaces) with automated `__attribute__((cleanup))` RAII. |
+| **Data Layout** | <img src="https://img.shields.io/badge/Zero--Copy_Views-e5a50a?style=flat&logo=buffer&logoColor=white&labelColor=e5a50a" height="20" /> | Immutable string views and slices to prevent redundant memory copying and bounds violations. |
+| **Safety Protocol** | <img src="https://img.shields.io/badge/Result_Types-dea584?style=flat&logo=rust&logoColor=white&labelColor=dea584" height="20" /> | Deterministic error handling via explicit `Result` return types; silent failures are prohibited. |
+| **Build System** | <img src="https://img.shields.io/badge/Make_Dist-0082fc?style=flat&logo=gnu&logoColor=white&labelColor=0082fc" height="20" /> | Source-level artifact generation and structural isolation. |
 
 ## <img src="https://cdn.simpleicons.org/github/ffffff" width="24" style="vertical-align: bottom;" /> Integration
 
-Camelot is a developer-first, source-available kernel. We do not ship pre-compiled binaries; you compile the framework directly alongside your project to ensure ABI compatibility and optimization.
-
-[![Read Quick Start](https://img.shields.io/badge/READ-QUICK_START-5a5d7c?style=for-the-badge&logo=gitbook&logoColor=white&labelColor=181717)](https://camelot-1.gitbook.io/docs/documentation)
+Camelot is distributed via versioned source releases. To integrate the framework, download the latest stable version from the [releases](https://github.com/tarantula-org/camelot/releases) section, compile the static library via `make`, and install it onto your system to link against your projects.
