@@ -8,13 +8,13 @@
 
 #include "camelot/memory.h"
 
-struct ListNode {
+typedef struct ListNode {
 	struct ListNode *next;
 	struct ListNode *prev;
 	unsigned char data[];
-};
+} ListNode;
 
-typedef struct {
+typedef struct List {
 	Arena *source;
 	struct ListNode *head;
 	struct ListNode *tail;
@@ -26,7 +26,7 @@ typedef struct {
 
 typedef struct {
 	/*
-	 * INTENT: Initializes a new Paged List on the given Arena.
+	 * INTENT: Initializes a new Linked List on the given Arena.
 	 * USAGE:
 	 * ```
 	 * List ints = list.create(&ctx, sizeof(int));
@@ -71,4 +71,4 @@ typedef struct {
 } ListNamespace;
 
 extern const ListNamespace list;
-
+
