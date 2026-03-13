@@ -29,7 +29,7 @@ The main project board serves as the starting point for all development:
 
 1. **The Tarantula Master Plan:** Check the GitHub Projects tab for active development columns.
 2. **Backlog & Free Issues:** Look for issues tagged with `needs-triage` or `enhancement`. These are generally free to pick up.
-3. **Strategic Roadmap (`[PLAN]` tags):** Issues marked as Roadmap Directives are prioritized architectural goals. Please comment on the issue before beginning work to ensure your implementation plan aligns with the Steering Committee's constraints.
+3. **Strategic Roadmap (`[PLAN]` tags):** Issues marked as Roadmap Directives are prioritized architectural goals. Please comment on the issue before beginning work to ensure your implementation plan aligns with the Architecture Team's constraints.
 4. **Proposing Features (`[RFC]` tags):** If you are suggesting a new feature, open a Feature Request issue first. We prioritize keeping the dependency budget at zero; abstractions built solely for hypothetical future use cases will be declined.
 
 Any work on issues marked for future milestones may conflict with ongoing core architectural changes. Please stick to the current active milestone.

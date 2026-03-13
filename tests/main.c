@@ -6,6 +6,9 @@
 
 #include "tests.h"
 
+int tests_run = 0;
+int tests_failed = 0;
+
 extern void test_types();
 extern void test_memory();
 extern void test_io();

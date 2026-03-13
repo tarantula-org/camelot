@@ -4,12 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef CAMELOT_LIST_H
-#define CAMELOT_LIST_H
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#pragma once
 
 #include "camelot/memory.h"
 
@@ -76,9 +71,4 @@ typedef struct {
 } ListNamespace;
 
 extern const ListNamespace list;
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif
+

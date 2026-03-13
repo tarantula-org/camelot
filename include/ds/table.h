@@ -4,12 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef CAMELOT_TABLE_H
-#define CAMELOT_TABLE_H
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#pragma once
 
 #include "../camelot/memory.h"
 #include "../types/string.h"
@@ -65,9 +60,4 @@ typedef struct {
 } TableNamespace;
 
 extern const TableNamespace table;
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif
+

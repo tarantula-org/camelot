@@ -4,12 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef CAMELOT_PRIMITIVES_H
-#define CAMELOT_PRIMITIVES_H
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#pragma once
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -39,9 +34,3 @@ typedef enum {
 	FILE_NOT_FOUND,
 	IO_ERROR,
 } Result;
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif

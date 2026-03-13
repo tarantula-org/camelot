@@ -6,6 +6,8 @@ We view security as a non-negotiable engineering constraint. We are committed to
 
 ## Maintenance Lifecycle
 
+**Stability Constraint:** For production environments, users must exclusively deploy tagged releases explicitly marked as "production ready". The `main` branch, dev builds, and pre-release tags are volatile and are not guaranteed to be stable or secure for production use.
+
 We adhere to a strict semantic versioning policy for security patches.
 
 | Version Track | Status | Support Level |
@@ -59,4 +61,3 @@ We pledge not to pursue legal action against researchers who adhere to these **R
 1. **Authorized Testing:** Research is conducted only on systems you own or have explicit permission to test.
 2. **Data Privacy:** No user data is compromised, exfiltrated, or destroyed during testing.
 3. **Non-Disclosure:** Vulnerability details are not published until a patch is released or the **90-day disclosure deadline** expires.
-

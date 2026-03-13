@@ -1,14 +1,9 @@
-/SECURITY.md             @tarantula-org/steering
-/CONTRIBUTING.md         @tarantula-org/steering
-/.github/                @tarantula-org/steering
-*.c                      @tarantula-org/core
-*.h                      @tarantula-org/core
-*.odin                   @tarantula-org/core
-Makefile                 @tarantula-org/core
-Dockerfile               @tarantula-org/core
-*.png                    @tarantula-org/studio
-*.blend                  @tarantula-org/studio
-*.glsl                   @tarantula-org/studio
-assets/                  @tarantula-org/studio
-docs/                    @tarantula-org/studio
-.github/workflows/       @tarantula-org/security @tarantula-org/steering
+/SECURITY.md             @tarantula-org/security
+/CONTRIBUTING.md         @tarantula-org/architecture
+/.github/                @tarantula-org/architecture
+*.c                      @tarantula-org/engineering
+*.h                      @tarantula-org/engineering
+Makefile                 @tarantula-org/engineering
+assets/                  @tarantula-org/engineering
+docs/                    @tarantula-org/engineering
+.github/workflows/       @tarantula-org/security @tarantula-org/architecture

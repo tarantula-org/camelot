@@ -4,12 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef CAMELOT_IO_H
-#define CAMELOT_IO_H
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#pragma once
 
 #include "camelot/memory.h"
 #include "types/primitives.h"
@@ -86,9 +81,3 @@ typedef struct {
 } IONamespace;
 
 extern const IONamespace io;
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif

@@ -4,12 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef CAMELOT_STRING_H
-#define CAMELOT_STRING_H
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#pragma once
 
 #include "camelot/memory.h"
 #include "primitives.h"
@@ -59,9 +54,3 @@ typedef struct {
 } StringNamespace;
 
 extern const StringNamespace string;
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif

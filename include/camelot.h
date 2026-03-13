@@ -4,12 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef CAMELOT_H
-#define CAMELOT_H
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#pragma once
 
 // --- VERSION ---
 // Format: Epoch.Major.Minor.Patch
@@ -37,10 +32,4 @@ extern "C" {
 
 // 3. IO (Use io.print / io.scan)
 // Note: printf is allowed for debugging but io.print is preferred.
-#endif
-
-#ifdef __cplusplus
-}
-#endif
-
 #endif

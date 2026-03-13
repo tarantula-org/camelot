@@ -4,12 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef CAMELOT_MEMORY_H
-#define CAMELOT_MEMORY_H
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#pragma once
 
 #include "types/primitives.h"
 
@@ -77,9 +72,3 @@ static inline void _cleanup_arena_func(Arena *a) {
 	if (a && a->buf)
 		arena.release(a);
 }
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif

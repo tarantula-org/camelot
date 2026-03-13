@@ -4,8 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef TESTS_H
-#define TESTS_H
+#pragma once
 
 #include <stdio.h>
 
@@ -14,8 +13,8 @@
 #define ALLOW_UNSAFE
 
 // Global Test State
-static int tests_run = 0;
-static int tests_failed = 0;
+extern int tests_run;
+extern int tests_failed;
 
 #define TEST(name) static void name()
 
@@ -44,4 +43,4 @@ static int tests_failed = 0;
 		tests_run++;                                                                               \
 	} while (0)
 
-#endif
+// Required additional line to fix warnings
