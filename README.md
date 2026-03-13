@@ -18,13 +18,13 @@
 
 <br />
 
-## <img src="https://cdn.simpleicons.org/blueprint/5a5d7c" width="24" style="vertical-align: bottom;" /> Overview
+## <img src="https://cdn.simpleicons.org/blueprint/ffffff" width="24" style="vertical-align: bottom;" /> Overview
 
 C remains the foundational language for systems engineering due to its minimal runtime, predictable performance, and strict ABI stability. However, the legacy `libc` ecosystem lacks modern safety paradigms, often forcing developers to adopt C++ to manage complexity at scale.
 
 **Camelot** is a standard library replacement built to bridge this gap. It implements the structural guarantees typically sought in higher-level languages—such as RAII, explicit error handling, and safe memory lifetimes—natively within C23. Our goal is to make C a rigorous, viable choice for modern large-scale projects.
 
-## <img src="https://cdn.simpleicons.org/polywork/5a5d7c" width="24" style="vertical-align: bottom;" /> Architecture
+## <img src="https://cdn.simpleicons.org/polywork/ffffff" width="24" style="vertical-align: bottom;" /> Architecture
 
 The framework functions via four distinct components designed for deterministic execution:
 
