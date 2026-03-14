@@ -8,7 +8,7 @@
 
 // --- VERSION ---
 // Format: Epoch.Major.Minor.Patch
-#define CAMELOT_VERSION "1.2.0.0"
+#define CAMELOT_VERSION "1.2.0.1"
 
 // --- MODULES ---
 #include "camelot/io.h"
