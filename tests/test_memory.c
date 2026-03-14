@@ -4,6 +4,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+#ifndef ALLOW_UNSAFE
+#define ALLOW_UNSAFE
+#endif
+
 #include <stdint.h>
 
 #include "camelot.h"

@@ -10,7 +10,9 @@
 
 #include "camelot.h"
 
+#ifndef ALLOW_UNSAFE
 #define ALLOW_UNSAFE
+#endif
 
 // Global Test State
 extern int tests_run;
