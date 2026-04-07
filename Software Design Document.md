@@ -1,3 +1,4 @@
+````markdown
 # Software Design Document Template
 
 > [\!Important]
@@ -64,12 +65,12 @@ To guarantee absolute portability across arbitrary C compilers and environments,
 
 ### Problem: Table
 
-  - **Statement:** C lacks a native associative array. This forces developers to write ad-hoc, inefficient linear searches or pull in bloated third-party dependencies just to map keys to values.
+  - **Statement:** Standard chaining or basic linear-probing hash maps suffer from severe cache misses, pointer chasing, and primary clustering. C lacks a native associative array, forcing developers to implement ad-hoc maps that degrade cache line efficiency and slow down CPU pipelines under high load.
   - **Solutions:** [[1]](#solution-table)
 
 ### Problem: Result
 
-  - **Statement:** C lacks a built-in way to enforce error checking. Functions often return magic values (-1, NULL) or rely on out-parameters, making it easy for developers to accidentally ignore failures and cause undefined behavior.
+  - **Statement:** Standard C lacks mechanisms to strictly enforce return value checking, and frequently conflates expected logic branching (e.g., a missing table key) with systemic failures (e.g., out-of-memory). Returning magic values (`NULL`, `-1`) obscures the error origin and forces the caller to manually distinguish between an acceptable empty state and an application-halting crash, leading to unhandled edge cases.
   - **Solutions:** [[1]](#solution-result)
 
 ### Problem: Explicit Deferral
@@ -128,12 +129,13 @@ To guarantee absolute portability across arbitrary C compilers and environments,
 
 ### Solution: Table
 
-  - **Statement:** A generic, allocator-backed hash map that provides constant-time `O(1)` lookups. It guarantees a deterministic memory layout for arbitrary keys and values without external dependencies.
+  - **Statement:** A cache-optimized, allocator-backed hash map implementing the Swiss Table open-addressing algorithm. It segregates internal state by maintaining a continuous array of 8-bit control bytes (metadata) physically separated from the key-value data payload. This layout enables the framework to utilize SWAR (SIMD Within A Register) bitwise operations to evaluate up to 8 buckets simultaneously within a single L1 cache fetch, guaranteeing deterministic `O(1)` throughput.
+  - **Trade-offs:** Requires a higher baseline memory footprint due to the parallel control array. Deletion logic complexity is elevated due to mandatory tombstone management to preserve probe sequences.
   - **Implementations:** [[1]](#implementation-table)
 
 ### Solution: Result
 
-  - **Statement:** A tagged union struct marked with compiler attributes. It forces the caller to unpack and handle either the successful value or the explicit error state before proceeding.
+  - **Statement:** A tri-state tagged union (`OK`, `NIL`, `ERR`) marked with compiler attributes (`warn_unused_result`) to enforce ABI contracts. It physically separates the concept of expected absence (`NIL`) from systemic failure (`ERR`). The `ERR` state is paired with a domain-prefixed 32-bit integer error code, ensuring zero-collision error tracking across framework and application boundaries while sharing a zero-cost memory footprint with the success value via a `union`.
   - **Implementations:** [[1]](#implementation-result)
 
 ### Solution: Explicit Deferral
@@ -167,11 +169,11 @@ struct Allocator {
     void* (*alloc)(Allocator* self, size_t size, size_t align);
     void  (*free)(Allocator* self, void* ptr, size_t size);
 };
-```
+````
 
 ### Implementation: Arena
 
-  - **Verification:** [[1]](#test-arena)
+  - **Verification:** [[1]](test-arena)
 
 **Description:** Pre-allocated memory block handling monotonic pointer bumping.
 
@@ -189,7 +191,7 @@ void ARENA_reset(Arena* self);
 
 ### Implementation: Primitives
 
-  - **Verification:** [[1]](#test-primitives)
+  - **Verification:** [[1]](test-primitives)
 
 **Description:** Typedefs ensuring cross-platform deterministic byte sizing.
 
@@ -210,7 +212,7 @@ typedef double   f64;
 
 ### Implementation: Slices
 
-  - **Verification:** [[1]](#test-slices)
+  - **Verification:** [[1]](test-slices)
 
 **Description:** Fat pointer for safe contiguous memory views.
 
@@ -226,7 +228,7 @@ Slice SLICE_sub(Slice s, size_t offset, size_t len);
 
 ### Implementation: Strings
 
-  - **Verification:** [[1]](#test-strings)
+  - **Verification:** [[1]](test-strings)
 
 **Description:** Immutable text slice wrapper.
 
@@ -238,7 +240,7 @@ String STRING_new(const char* literal, size_t len);
 
 ### Implementation: Vector
 
-  - **Verification:** [[1]](#test-vector)
+  - **Verification:** [[1]](test-vector)
 
 **Description:** Dynamically resizing array coupled with a defined allocator.
 
@@ -257,7 +259,7 @@ void VECTOR_push(Vector* vec, const void* item);
 
 ### Implementation: Iterator
 
-  - **Verification:** [[1]](#test-iterator)
+  - **Verification:** [[1]](test-iterator)
 
 **Description:** Abstract base interface guaranteeing forward-iterable structures using dynamic dispatch.
 
@@ -279,72 +281,79 @@ void VECTOR_ITERATOR_init(VectorIterator* self, Vector* vec);
 
 ### Implementation: Table
 
-  - **Verification:** [[1]](#test-table)
+  - **Verification:** [[1]](test-table)
 
-**Description:** Hash map utilizing the provided allocator.
+**Description:** Segregated metadata and data arrays to support vectorized probing.
 
 ```c
 typedef struct {
     String key;
     void* value;
-} Entry;
+} TableEntry;
 
 typedef struct {
     Allocator* alloc;
-    Entry* entries;
+    u8* ctrl;
+    TableEntry* slots;
     size_t len;
     size_t cap;
 } Table;
 
-Table TABLE_init(Allocator* alloc);
-void TABLE_set(Table* table, String key, void* value);
-void* TABLE_get(Table* table, String key);
+Result TABLE_init(Allocator* alloc, size_t cap);
+Result TABLE_set(Table* table, String key, void* value);
+Result TABLE_get(Table* table, String key);
 ```
 
 ### Implementation: Result
 
-  - **Verification:** [[1]](#test-result)
+  - **Verification:** [[1]](test-result)
 
-**Description:** Tagged union enforced by compiler warnings.
+**Description:** Domain-prefixed error codes and a strictly-typed tri-state union enforced by compiler warnings.
 
 ```c
+#define DOMAIN_CAMELOT 0x00010000
+#define DOMAIN_APP     0x00020000
+
+#define ERR_OUT_OF_MEMORY (DOMAIN_CAMELOT | 0x0001)
+#define ERR_FILE_ERROR    (DOMAIN_CAMELOT | 0x0002)
+#define ERR_OUT_OF_BOUNDS (DOMAIN_CAMELOT | 0x0003)
+
 typedef enum {
     OK,
-    OUT_OF_MEMORY,
-    FILE_ERROR,
-    OUT_OF_BOUNDS
-} Err;
+    NIL,
+    ERR
+} State;
 
 typedef struct __attribute__((warn_unused_result)) {
-    bool is_ok;
+    State state;
     union {
         void* val;
-        Err err;
-    } data;
+        u32 err_code;
+    } payload;
 } Result;
 ```
 
 ### Implementation: Explicit Deferral
 
-  - **Verification:** [[1]](#test-explicit-deferral)
+  - **Verification:** [[1]](test-explicit-deferral)
 
 **Description:** Control flow convention mapping all exit paths to a single cleanup block.
 
 ```c
 Result IO_file(Allocator* alloc, String path) {
-    Result res = { .is_ok = false, .data.err = OK };
+    Result res = { .state = ERR, .payload.err_code = ERR_FILE_ERROR };
     void* buffer = alloc->alloc(alloc, 1024, 8);
     
     if (!buffer) { 
-        res.data.err = OUT_OF_MEMORY; 
+        res.payload.err_code = ERR_OUT_OF_MEMORY; 
         goto defer; 
     }
     
-    res.is_ok = true;
-    res.data.val = buffer;
+    res.state = OK;
+    res.payload.val = buffer;
     
 defer:
-    if (!res.is_ok && buffer) {
+    if (res.state == ERR && buffer) {
         alloc->free(alloc, buffer, 1024);
     }
     return res;
@@ -353,7 +362,7 @@ defer:
 
 ### Implementation: Explicit Deinit
 
-  - **Verification:** [[1]](#test-explicit-deinit)
+  - **Verification:** [[1]](test-explicit-deinit)
 
 **Description:** Standardized teardown function mapping for resource-owning structs.
 
@@ -369,7 +378,7 @@ void VECTOR_deinit(Vector* vec) {
 
 ### Implementation: Files
 
-  - **Verification:** [[1]](#test-files)
+  - **Verification:** [[1]](test-files)
 
 **Description:** I/O subsystem wrapped in the Result architecture.
 
@@ -471,11 +480,22 @@ assert(TABLE_get(&t, str_key) == val);
 
 ### Test: Result
 
-**Description:** Validate unpacking functions yield correct data or error state.
+**Description:** Assert initialization, data insertion, and retrieval through the tri-state return architecture.
 
 ```c
-Result r = IO_fail();
-assert(r.is_ok == true);
+Result res_init = TABLE_init(alloc, 16);
+assert(res_init.state == OK);
+Table* t = res_init.payload.val;
+
+Result res_set = TABLE_set(t, str_key, val);
+assert(res_set.state == OK);
+
+Result res_get = TABLE_get(t, str_key);
+assert(res_get.state == OK);
+assert(res_get.payload.val == val);
+
+Result res_miss = TABLE_get(t, missing_key);
+assert(res_miss.state == NIL);
 ```
 
 ### Test: Explicit Deferral
@@ -505,7 +525,7 @@ assert(arena_base->freed_bytes == expected_bytes);
 
 ```c
 Result r = IO_read(alloc, bad_path);
-assert(r.is_ok == false && r.data.err == FILE_ERROR);
+assert(r.state == ERR && r.payload.err_code == ERR_FILE_ERROR);
 ```
 
 ## 6\. Next Steps and Review
