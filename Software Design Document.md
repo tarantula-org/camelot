@@ -9,24 +9,20 @@
 
 The Camelot framework enforces strict nomenclature rules to ensure unparalleled consistency across the codebase.
 
-1.  **[Primary Requirement]:** All structures and functions must strictly utilize the `NAMESPACE_function` format, where the prefix/namespace is fully uppercase and the action/function suffix is fully lowercase.
-2.  **[Secondary Requirement]:** Namespace and function components must be connected by an underscore, and full words must be consistently favored to maintain semantic clarity.
-3.  **[Prohibitions & Restrictions]:** Word truncations or casual abbreviations are strictly prohibited unless using universally standard acronyms (e.g., `IO`).
+1.  **Primary Requirement:** All structures and functions must strictly utilize the `NAMESPACE_function` format, where the prefix/namespace is fully uppercase and the action/function suffix is fully lowercase.
+2.  **Secondary Requirement:** Namespace and function components must be connected by an underscore, and full words must be consistently favored to maintain semantic clarity.
+3.  **Prohibitions & Restrictions:** Word truncations or casual abbreviations are strictly prohibited unless using universally standard acronyms (e.g., `IO`).
 
 ### Portability & Compiler Extensions
 
 To guarantee absolute portability across arbitrary C compilers and environments, reliance on non-standard runtime compiler extensions is explicitly prohibited.
 
-1.  **[Primary Requirement]:** The codebase must remain compatible with all major C compilers (e.g., MSVC, GCC, Clang) by avoiding features that inject or manipulate logic at runtime via compiler-specific extensions.
-2.  **[Secondary Requirement]:** Compiler attributes that operate strictly during compilation without mutating runtime binaries, such as static analysis hints (e.g., `__attribute__((warn_unused_result))`), are acceptable and encouraged.
-3.  **[Prohibitions & Restrictions]:** Runtime-altering extensions, specifically GCC's `__attribute__((cleanup))` for RAII emulation, are forbidden due to lack of support in non-GNU environments.
+1.  **Primary Requirement:** The codebase must remain compatible with all major C compilers (e.g., MSVC, GCC, Clang) by avoiding features that inject or manipulate logic at runtime via compiler-specific extensions.
+2.  **Secondary Requirement:** Compiler attributes that operate strictly during compilation without mutating runtime binaries, such as static analysis hints (e.g., `__attribute__((warn_unused_result))`), are acceptable and encouraged.
+3.  **Prohibitions & Restrictions:** Runtime-altering extensions, specifically GCC's `__attribute__((cleanup))` for RAII emulation, are forbidden due to lack of support in non-GNU environments.
 
-## 1\. Design Diagram Overview
-
-**Diagram Link:** [Epoch 1 Diagram]
-
-## 2\. Problems to be Solved
-
+## 1\. Problems to be Solved
+git
 ### Problem: Allocator agnosticism
 
   - **Statement:** Hardcoding `malloc` and `free` throughout a codebase creates rigid data structures. It prevents developers from swapping out memory strategies for testing, restricted environments, or performance optimization without rewriting the structure's internal logic.
@@ -89,7 +85,7 @@ To guarantee absolute portability across arbitrary C compilers and environments,
 
 -----
 
-## 3\. Proposed Solutions
+## 2\. Proposed Solutions
 
 ### Solution: VTable
 
@@ -154,7 +150,7 @@ To guarantee absolute portability across arbitrary C compilers and environments,
 
 -----
 
-## 4\. Implementation Details
+## 3\. Implementation Details
 
 ### Implementation: VTable
 
@@ -388,7 +384,7 @@ Result IO_write(Allocator* alloc, String path, Slice data);
 
 -----
 
-## 5\. Testing and Validation
+## 4\. Testing and Validation
 
 ### Test: VTable
 
@@ -527,7 +523,7 @@ Result r = IO_read(alloc, bad_path);
 assert(r.state == ERR && r.payload.err_code == ERR_FILE_ERROR);
 ```
 
-## 6\. Next Steps and Review
+## 5\. Next Steps and Review
 
 The implementation phase will commence after the final review and approval of this design document.
 
