@@ -1,4 +1,3 @@
-````markdown
 # Software Design Document Template
 
 > [\!Important]
