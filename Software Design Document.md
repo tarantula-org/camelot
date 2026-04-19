@@ -9,31 +9,9 @@
 
 Camelot prioritizes long-term enterprise reliability, cross-platform interoperability, and transaction stability over trendy syntactic sugar. Borrowing the survivability thesis of platforms like the JVM ("Write Once, Run Anywhere"), Camelot's abstractions are engineered to be predictably robust, backward-compatible, and rigorously tested so they can run undisturbed for decades in mission-critical environments.
 
-<<<<<<< HEAD
-### Libc Interoperability & Parameter Coherence
-
-Camelot is a framework that aims to make libc coherent across platforms and bring modernity to C. It is **not** a replacement, but a massive aid.
-1. **[Built-in Helpers]:** Camelot intrinsically embraces libc. For example, it is a waste of time to reinvent `printf`; instead, Camelot provides structured built-in helpers either to flawlessly bridge Camelot's components into libc, or to execute libc functionality implicitly wrapped safely by Camelot types.
-2. **[Clarity over Magic]:** Any logic designed to interface with libc must be engineered to be explicitly clear, accessible, and trivial to understand.
-3. **[Parameter Ordering]:** API endpoints must maintain absolute coherence in parameter layout. Every interface function must follow a deterministic sequence (e.g., `Allocator*` always first, object instance pointer second, primitive arguments third).
-
-### C23 Architectural Standard
-
-Camelot leverages the definitive state-of-the-art C23 standard to eradicate legacy bloat.
-1. **[Primary Requirement]:** Legacy abstractions and macros (e.g., `<stdbool.h>`, `NULL`) and visually ugly "underscore-uppercase" compiler keywords (e.g., `_Bool`, `_Static_assert`, `_Alignas`) are strictly forbidden.
-2. **[First-class Types]:** The codebase must globally standardize on native C23 utilities, notably: `bool`, `true`, `false`, `nullptr`, `constexpr`, `alignas`, and `typeof`.
-
-### Design Coherence & Nomenclature
-
-The Camelot framework enforces strict structural nomenclature rules to ensure unparalleled consistency.
-1. **[Structure Namespaces]:** All external structures and functions must utilize the `NAMESPACE_function` formatting (e.g., prefix namespace fully uppercase, action suffix fully lowercase, connected by an underscore).
-2. **[Node Unique Topologies]:** Internal components of robust data structures (such as link nodes) must be uniquely dedicated and explicitly named after their parent structure (e.g., `DLIST_Node`) to eliminate shadowing and structural ambiguity.
-3. **[Prohibitions & Restrictions]:** Word truncations or casual abbreviations are prohibited unless they are universal acronyms (e.g., `IO`). 
-=======
 1.  **Primary Requirement:** All structures and functions must strictly utilize the `NAMESPACE_function` format, where the prefix/namespace is fully uppercase and the action/function suffix is fully lowercase.
 2.  **Secondary Requirement:** Namespace and function components must be connected by an underscore, and full words must be consistently favored to maintain semantic clarity.
 3.  **Prohibitions & Restrictions:** Word truncations or casual abbreviations are strictly prohibited unless using universally standard acronyms (e.g., `IO`).
->>>>>>> 7b82093d2ad11660ca65eea05e79325219c288bd
 
 ### Portability & Compiler Extensions
 
@@ -42,17 +20,9 @@ To guarantee absolute portability across arbitrary C compilers and environments,
 2. **[Secondary Requirement]:** Compiler attributes that operate strictly during compilation, such as `[[nodiscard]]`, are acceptable and encouraged.
 3. **[Prohibitions & Restrictions]:** Runtime-altering extensions, specifically GCC's `__attribute__((cleanup))`, are forbidden due to lack of support in non-GNU environments.
 
-<<<<<<< HEAD
-## 1. Design Diagram Overview
-
-**Diagram Link:** [Epoch 1 Diagram]
-
-## 2. Problems to be Solved
-=======
 1.  **Primary Requirement:** The codebase must remain compatible with all major C compilers (e.g., MSVC, GCC, Clang) by avoiding features that inject or manipulate logic at runtime via compiler-specific extensions.
 2.  **Secondary Requirement:** Compiler attributes that operate strictly during compilation without mutating runtime binaries, such as static analysis hints (e.g., `__attribute__((warn_unused_result))`), are acceptable and encouraged.
 3.  **Prohibitions & Restrictions:** Runtime-altering extensions, specifically GCC's `__attribute__((cleanup))` for RAII emulation, are forbidden due to lack of support in non-GNU environments.
->>>>>>> 7b82093d2ad11660ca65eea05e79325219c288bd
 
 ## 1\. Problems to be Solved
 git
@@ -123,11 +93,7 @@ git
 
 -----
 
-<<<<<<< HEAD
-## 3. Proposed Solutions
-=======
 ## 2\. Proposed Solutions
->>>>>>> 7b82093d2ad11660ca65eea05e79325219c288bd
 
 ### Solution: VTable
 
@@ -197,11 +163,7 @@ git
 
 -----
 
-<<<<<<< HEAD
-## 4. Implementation Details
-=======
 ## 3\. Implementation Details
->>>>>>> 7b82093d2ad11660ca65eea05e79325219c288bd
 
 ### Implementation: VTable
 
@@ -460,11 +422,7 @@ Result IO_write(Allocator* alloc, String path, Slice data);
 
 -----
 
-<<<<<<< HEAD
-## 5. Testing and Validation
-=======
 ## 4\. Testing and Validation
->>>>>>> 7b82093d2ad11660ca65eea05e79325219c288bd
 
 ### Test: VTable
 
@@ -614,11 +572,7 @@ Result r = IO_read(alloc, bad_path);
 assert(r.state == ERR && r.payload.err_code == ERR_FILE_ERROR);
 ```
 
-<<<<<<< HEAD
-## 6. Next Steps and Review
-=======
 ## 5\. Next Steps and Review
->>>>>>> 7b82093d2ad11660ca65eea05e79325219c288bd
 
 The implementation phase will commence after the final review and approval of this design document.
 
