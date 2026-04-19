@@ -1,32 +1,46 @@
-````markdown
 # Software Design Document Template
 
-> [\!Important]
+> [!Important]
 > All designs and implementations must strictly adhere to the [Yutila Security Policies](https://docs.google.com/document/d/1zqEZ9wyOiUj6hyH294iyZh9IXi8PnqnQC8UB7tnc0I0/edit?usp=sharing). Verify that your proposal incorporates the core architectural principles (Fail-Safe Defaults, Least Privilege, and Open Design) before submitting for review.
 
 ## Constraints
 
-### Naming Coherence
+### Enterprise Reliability (The Java Paradigm)
 
-The Camelot framework enforces strict nomenclature rules to ensure unparalleled consistency across the codebase.
+Camelot prioritizes long-term enterprise reliability, cross-platform interoperability, and transaction stability over trendy syntactic sugar. Borrowing the survivability thesis of platforms like the JVM ("Write Once, Run Anywhere"), Camelot's abstractions are engineered to be predictably robust, backward-compatible, and rigorously tested so they can run undisturbed for decades in mission-critical environments.
 
-1.  **[Primary Requirement]:** All structures and functions must strictly utilize the `NAMESPACE_function` format, where the prefix/namespace is fully uppercase and the action/function suffix is fully lowercase.
-2.  **[Secondary Requirement]:** Namespace and function components must be connected by an underscore, and full words must be consistently favored to maintain semantic clarity.
-3.  **[Prohibitions & Restrictions]:** Word truncations or casual abbreviations are strictly prohibited unless using universally standard acronyms (e.g., `IO`).
+### Libc Interoperability & Parameter Coherence
+
+Camelot is a framework that aims to make libc coherent across platforms and bring modernity to C. It is **not** a replacement, but a massive aid.
+1. **[Built-in Helpers]:** Camelot intrinsically embraces libc. For example, it is a waste of time to reinvent `printf`; instead, Camelot provides structured built-in helpers either to flawlessly bridge Camelot's components into libc, or to execute libc functionality implicitly wrapped safely by Camelot types.
+2. **[Clarity over Magic]:** Any logic designed to interface with libc must be engineered to be explicitly clear, accessible, and trivial to understand.
+3. **[Parameter Ordering]:** API endpoints must maintain absolute coherence in parameter layout. Every interface function must follow a deterministic sequence (e.g., `Allocator*` always first, object instance pointer second, primitive arguments third).
+
+### C23 Architectural Standard
+
+Camelot leverages the definitive state-of-the-art C23 standard to eradicate legacy bloat.
+1. **[Primary Requirement]:** Legacy abstractions and macros (e.g., `<stdbool.h>`, `NULL`) and visually ugly "underscore-uppercase" compiler keywords (e.g., `_Bool`, `_Static_assert`, `_Alignas`) are strictly forbidden.
+2. **[First-class Types]:** The codebase must globally standardize on native C23 utilities, notably: `bool`, `true`, `false`, `nullptr`, `constexpr`, `alignas`, and `typeof`.
+
+### Design Coherence & Nomenclature
+
+The Camelot framework enforces strict structural nomenclature rules to ensure unparalleled consistency.
+1. **[Structure Namespaces]:** All external structures and functions must utilize the `NAMESPACE_function` formatting (e.g., prefix namespace fully uppercase, action suffix fully lowercase, connected by an underscore).
+2. **[Node Unique Topologies]:** Internal components of robust data structures (such as link nodes) must be uniquely dedicated and explicitly named after their parent structure (e.g., `DLIST_Node`) to eliminate shadowing and structural ambiguity.
+3. **[Prohibitions & Restrictions]:** Word truncations or casual abbreviations are prohibited unless they are universal acronyms (e.g., `IO`). 
 
 ### Portability & Compiler Extensions
 
 To guarantee absolute portability across arbitrary C compilers and environments, reliance on non-standard runtime compiler extensions is explicitly prohibited.
+1. **[Primary Requirement]:** The codebase must remain compatible with all major C compilers (e.g., MSVC, GCC, Clang).
+2. **[Secondary Requirement]:** Compiler attributes that operate strictly during compilation, such as `[[nodiscard]]`, are acceptable and encouraged.
+3. **[Prohibitions & Restrictions]:** Runtime-altering extensions, specifically GCC's `__attribute__((cleanup))`, are forbidden due to lack of support in non-GNU environments.
 
-1.  **[Primary Requirement]:** The codebase must remain compatible with all major C compilers (e.g., MSVC, GCC, Clang) by avoiding features that inject or manipulate logic at runtime via compiler-specific extensions.
-2.  **[Secondary Requirement]:** Compiler attributes that operate strictly during compilation without mutating runtime binaries, such as static analysis hints (e.g., `__attribute__((warn_unused_result))`), are acceptable and encouraged.
-3.  **[Prohibitions & Restrictions]:** Runtime-altering extensions, specifically GCC's `__attribute__((cleanup))` for RAII emulation, are forbidden due to lack of support in non-GNU environments.
-
-## 1\. Design Diagram Overview
+## 1. Design Diagram Overview
 
 **Diagram Link:** [Epoch 1 Diagram]
 
-## 2\. Problems to be Solved
+## 2. Problems to be Solved
 
 ### Problem: Allocator agnosticism
 
@@ -35,7 +49,7 @@ To guarantee absolute portability across arbitrary C compilers and environments,
 
 ### Problem: Arena
 
-  - **Statement:** Tracking and freeing thousands of individual object allocations (`malloc`/`free`) leads to memory fragmentation, high CPU overhead, and inevitable memory leaks when a single free is forgotten.
+  - **Statement:** Tracking and freeing thousands of individual object allocations leads to memory fragmentation, high CPU overhead, and inevitable memory leaks when a single free is forgotten.
   - **Solutions:** [[1]](#solution-arena)
 
 ### Problem: Primitives
@@ -45,7 +59,7 @@ To guarantee absolute portability across arbitrary C compilers and environments,
 
 ### Problem: Slices
 
-  - **Statement:** Standard C arrays decay into raw pointers when passed across function boundaries, dropping length metadata. This forces developers to pass separate size arguments, or rely on unsafe assumptions. Additionally, accessing substrings or extracting segments typically requires allocation, copying new memory, causing unnecessary performance overhead and memory pressure.
+  - **Statement:** Standard C arrays decay into raw pointers when passed across function boundaries, dropping length metadata. This forces length arguments and reliance on unsafe assumptions. 
   - **Solutions:** [[1]](#solution-slices)
 
 ### Problem: Strings
@@ -53,14 +67,19 @@ To guarantee absolute portability across arbitrary C compilers and environments,
   - **Statement:** Null-terminated strings in C require `O(N)` traversal just to determine their length and are the root cause of most buffer overflow vulnerabilities.
   - **Solutions:** [[1]](#solution-strings)
 
-### Problem: Vector
+### Problem: Dynamic Array
 
-  - **Statement:** Statically sized C arrays cannot grow. Developers are forced to manually write capacity tracking, reallocation, and memory-moving boilerplate every time a dynamically sized collection is needed.
-  - **Solutions:** [[1]](#solution-vector)
+  - **Statement:** Statically sized C arrays cannot grow. Developers are forced to manually write capacity tracking, reallocation, and memory-moving boilerplate. When arrays do reallocate, standard 2.0x growth multipliers mathematically prevent the allocator from ever recycling the previously freed array memory, aggressively compounding heap space and slowing down logic.
+  - **Solutions:** [[1]](#solution-dynamic-array)
+
+### Problem: Doubly Linked List
+
+  - **Statement:** Standard contiguous collections force memory shifts for internal insertions and invalidate pointers upon resizing. A stable, sequential access collection is required where elements preserve absolute hardware addresses.
+  - **Solutions:** [[1]](#solution-doubly-linked-list)
 
 ### Problem: Iterator
 
-  - **Statement:** Different data structures and streams require entirely different logic loops for traversal. This forces developers to hardcode structural knowledge into their loops, making code rigid and algorithms untestable against generic inputs.
+  - **Statement:** Client code is overwhelmed by explicit iterator tracking patterns or ad-hoc enhanced `for` loops. Because different structures demand different looping boundaries, developers must hardcode structural knowledge to iterate, tightly coupling algorithms to specific data shapes.
   - **Solutions:** [[1]](#solution-iterator)
 
 ### Problem: Table
@@ -70,7 +89,7 @@ To guarantee absolute portability across arbitrary C compilers and environments,
 
 ### Problem: Result
 
-  - **Statement:** Standard C lacks mechanisms to strictly enforce return value checking, and frequently conflates expected logic branching (e.g., a missing table key) with systemic failures (e.g., out-of-memory). Returning magic values (`NULL`, `-1`) obscures the error origin and forces the caller to manually distinguish between an acceptable empty state and an application-halting crash, leading to unhandled edge cases.
+  - **Statement:** Standard C lacks mechanisms to strictly enforce return value checking, and frequently conflates expected logic branching (e.g., a missing table key) with systemic failures (e.g., out-of-memory). Returning magic values obscures the error origin and forces the caller to manually distinguish between an acceptable empty state and an application-halting crash.
   - **Solutions:** [[1]](#solution-result)
 
 ### Problem: Explicit Deferral
@@ -90,7 +109,7 @@ To guarantee absolute portability across arbitrary C compilers and environments,
 
 -----
 
-## 3\. Proposed Solutions
+## 3. Proposed Solutions
 
 ### Solution: VTable
 
@@ -104,38 +123,43 @@ To guarantee absolute portability across arbitrary C compilers and environments,
 
 ### Solution: Primitives
 
-  - **Statement:** A header that includes all standardized primitives alongside fixed naming conventions.
+  - **Statement:** A header that includes all standardized primitives alongside fixed naming conventions, natively exploiting C23 `bool`.
   - **Implementations:** [[1]](#implementation-primitives)
 
 ### Solution: Slices
 
-  - **Statement:** A bounds-checked, fat-pointer slice representation (pointer + size). Slicing memory allows for zero-copy parsing and manipulation, completely decoupled from memory ownership.
+  - **Statement:** A bounds-checked, fat-pointer slice representation (pointer + size). Slicing memory allows for zero-copy parsing and manipulation.
   - **Implementations:** [[1]](#implementation-slices)
 
 ### Solution: Strings
 
-  - **Statement:** A specialized Slice explicitly constrained to hold valid text. It provides `O(1)` length resolution, strict bounds checking, and completely ignores null terminators.
+  - **Statement:** A specialized Slice explicitly constrained to hold valid text. It provides `O(1)` length resolution, strict bounds checking, and ignores null terminators, while supporting Camelot's built-in libc conversion utilities.
   - **Implementations:** [[1]](#implementation-strings)
 
-### Solution: Vector
+### Solution: Dynamic Array
 
-  - **Statement:** An allocator-aware struct that automatically manages its own capacity and resizing. It handles the underlying memory allocation while providing a safe API surface for access and mutation.
-  - **Implementations:** [[1]](#implementation-vector)
+  - **Statement:** A memory-safe `DynamicArray` interface that manages its buffer lifetime. For its optimal resizing strategy, the array utilizes a mathematically proven 1.5x capacity growth multiplier (calculated efficiently via bitwise right-shift addition `cap = cap + (cap >> 1)`). By growing at exactly 1.5x instead of the industry standard 2.0x, the sum of all previously discarded block allocations will eventually exceed the next requested capacity. Once this threshold is crossed, the host system's memory allocator can immediately coalesce and recycle the older blocks natively, achieving supreme optimal memory reduction without manual tuning.
+  - **Implementations:** [[1]](#implementation-dynamic-array)
+
+### Solution: Doubly Linked List
+
+  - **Statement:** A bidirectional pointer-based chain structured as a `DList` with dedicated `DLIST_Node` components. It strictly guarantees hardware pointer stability (nodes never move during list modification) and maintains robust, O(1) insertion scaling across any midpoint.
+  - **Implementations:** [[1]](#implementation-doubly-linked-list)
 
 ### Solution: Iterator
 
-  - **Statement:** A generic VTable interface abstracting traversal. It unifies loop logic via virtual dispatch, allowing generic algorithms to process sequential generic inputs entirely oblivious to the underlying memory layout.
+  - **Statement:** A generic VTable interface designed specifically to streamline explicit iterator patterns present in typical client code. Through dynamic virtual dispatch, developers can execute simplified looping schemas that inherently extract elements safely without evaluating specific capacity, limits, or boundary checks for different types.
   - **Implementations:** [[1]](#implementation-iterator)
 
 ### Solution: Table
 
-  - **Statement:** A cache-optimized, allocator-backed hash map implementing the Swiss Table open-addressing algorithm. It segregates internal state by maintaining a continuous array of 8-bit control bytes (metadata) physically separated from the key-value data payload. This layout enables the framework to utilize SWAR (SIMD Within A Register) bitwise operations to evaluate up to 8 buckets simultaneously within a single L1 cache fetch, guaranteeing deterministic `O(1)` throughput.
+  - **Statement:** A cache-optimized, allocator-backed hash map employing Swiss Table open-addressing. It segregates metadata into a continuous block from the payload, yielding heavy SIMD-friendly access logic.
   - **Trade-offs:** Requires a higher baseline memory footprint due to the parallel control array. Deletion logic complexity is elevated due to mandatory tombstone management to preserve probe sequences.
   - **Implementations:** [[1]](#implementation-table)
 
 ### Solution: Result
 
-  - **Statement:** A tri-state tagged union (`OK`, `NIL`, `ERR`) marked with compiler attributes (`warn_unused_result`) to enforce ABI contracts. It physically separates the concept of expected absence (`NIL`) from systemic failure (`ERR`). The `ERR` state is paired with a domain-prefixed 32-bit integer error code, ensuring zero-collision error tracking across framework and application boundaries while sharing a zero-cost memory footprint with the success value via a `union`.
+  - **Statement:** A tri-state tagged union (`OK`, `NIL`, `ERR`) marked with the native C23 `[[nodiscard]]` attribute. It distinctly uncouples intended logical absence (`NIL`) from system halting failures (`ERR`). Returns contain unique application domains, negating integer collision risks.
   - **Implementations:** [[1]](#implementation-result)
 
 ### Solution: Explicit Deferral
@@ -150,12 +174,12 @@ To guarantee absolute portability across arbitrary C compilers and environments,
 
 ### Solution: Files
 
-  - **Statement:** A thin abstracted boundary layer that wraps OS-specific I/O directly into Camelot's Result types and Allocator interfaces, ensuring the framework's strict safety rules are applied whenever it touches data outside the system.
+  - **Statement:** An abstracted translation boundary wrapping POSIX/Windows IO seamlessly into Camelot's Result types to ensure the framework's strict safety rules apply.
   - **Implementations:** [[1]](#implementation-files)
 
 -----
 
-## 4\. Implementation Details
+## 4. Implementation Details
 
 ### Implementation: VTable
 
@@ -169,11 +193,11 @@ struct Allocator {
     void* (*alloc)(Allocator* self, size_t size, size_t align);
     void  (*free)(Allocator* self, void* ptr, size_t size);
 };
-````
+```
 
 ### Implementation: Arena
 
-  - **Verification:** [[1]](test-arena)
+  - **Verification:** [[1]](#test-arena)
 
 **Description:** Pre-allocated memory block handling monotonic pointer bumping.
 
@@ -191,13 +215,13 @@ void ARENA_reset(Arena* self);
 
 ### Implementation: Primitives
 
-  - **Verification:** [[1]](test-primitives)
+  - **Verification:** [[1]](#test-primitives)
 
-**Description:** Typedefs ensuring cross-platform deterministic byte sizing.
+**Description:** Typedefs ensuring cross-platform deterministic byte sizing explicitly supporting native C23 structures.
 
 ```c
 #include <stdint.h>
-#include <stdbool.h>
+
 typedef uint8_t  u8;
 typedef uint16_t u16;
 typedef uint32_t u32;
@@ -212,7 +236,7 @@ typedef double   f64;
 
 ### Implementation: Slices
 
-  - **Verification:** [[1]](test-slices)
+  - **Verification:** [[1]](#test-slices)
 
 **Description:** Fat pointer for safe contiguous memory views.
 
@@ -228,9 +252,9 @@ Slice SLICE_sub(Slice s, size_t offset, size_t len);
 
 ### Implementation: Strings
 
-  - **Verification:** [[1]](test-strings)
+  - **Verification:** [[1]](#test-strings)
 
-**Description:** Immutable text slice wrapper.
+**Description:** Immutable text slice wrapper designed to seamlessly transform via built-in bridge macros/helpers when exposed to libc components.
 
 ```c
 typedef Slice String;
@@ -238,11 +262,11 @@ typedef Slice String;
 String STRING_new(const char* literal, size_t len);
 ```
 
-### Implementation: Vector
+### Implementation: Dynamic Array
 
-  - **Verification:** [[1]](test-vector)
+  - **Verification:** [[1]](#test-dynamic-array)
 
-**Description:** Dynamically resizing array coupled with a defined allocator.
+**Description:** Dynamically scalable array utilizing optimal 1.5x expansion logic to gracefully recycle allocations under heap pressure.
 
 ```c
 typedef struct {
@@ -251,17 +275,42 @@ typedef struct {
     size_t len;
     size_t cap;
     size_t stride;
-} Vector;
+} DynamicArray;
 
-Vector VECTOR_init(Allocator* alloc, size_t stride);
-void VECTOR_push(Vector* vec, const void* item);
+DynamicArray DARRAY_init(Allocator* alloc, size_t stride);
+void DARRAY_push(DynamicArray* arr, const void* item);
+```
+
+### Implementation: Doubly Linked List
+
+  - **Verification:** [[1]](#test-doubly-linked-list)
+
+**Description:** Segregated explicitly named structure node chain mapping strictly identical hardware pointers.
+
+```c
+typedef struct DLIST_Node DLIST_Node;
+struct DLIST_Node {
+    DLIST_Node* next;
+    DLIST_Node* prev;
+    void* value;
+};
+
+typedef struct {
+    Allocator* alloc;
+    DLIST_Node* head;
+    DLIST_Node* tail;
+    size_t len;
+} DList;
+
+DList DLIST_init(Allocator* alloc);
+void DLIST_append(DList* list, void* value);
 ```
 
 ### Implementation: Iterator
 
-  - **Verification:** [[1]](test-iterator)
+  - **Verification:** [[1]](#test-iterator)
 
-**Description:** Abstract base interface guaranteeing forward-iterable structures using dynamic dispatch.
+**Description:** Generic interface streamlining iterations and erasing underlying explicit indexing requirements.
 
 ```c
 typedef struct Iterator Iterator;
@@ -269,19 +318,19 @@ struct Iterator {
     void* (*next)(Iterator* self);
 };
 
-// Example concrete implementation wrapping a Vector
+// Example concrete implementation wrapping a DynamicArray
 typedef struct {
     Iterator base;
-    Vector* vec;
+    DynamicArray* arr;
     size_t index;
-} VectorIterator;
+} DARRAY_Iterator;
 
-void VECTOR_ITERATOR_init(VectorIterator* self, Vector* vec);
+void DARRAY_ITERATOR_init(DARRAY_Iterator* self, DynamicArray* arr);
 ```
 
 ### Implementation: Table
 
-  - **Verification:** [[1]](test-table)
+  - **Verification:** [[1]](#test-table)
 
 **Description:** Segregated metadata and data arrays to support vectorized probing.
 
@@ -306,9 +355,9 @@ Result TABLE_get(Table* table, String key);
 
 ### Implementation: Result
 
-  - **Verification:** [[1]](test-result)
+  - **Verification:** [[1]](#test-result)
 
-**Description:** Domain-prefixed error codes and a strictly-typed tri-state union enforced by compiler warnings.
+**Description:** Domain-prefixed error codes mapped into an ABI-protected C23 union structure.
 
 ```c
 #define DOMAIN_CAMELOT 0x00010000
@@ -324,7 +373,7 @@ typedef enum {
     ERR
 } State;
 
-typedef struct __attribute__((warn_unused_result)) {
+typedef struct [[nodiscard]] {
     State state;
     union {
         void* val;
@@ -335,16 +384,16 @@ typedef struct __attribute__((warn_unused_result)) {
 
 ### Implementation: Explicit Deferral
 
-  - **Verification:** [[1]](test-explicit-deferral)
+  - **Verification:** [[1]](#test-explicit-deferral)
 
-**Description:** Control flow convention mapping all exit paths to a single cleanup block.
+**Description:** Control flow convention mapping all exit paths to a single cleanup block via `goto`.
 
 ```c
 Result IO_file(Allocator* alloc, String path) {
     Result res = { .state = ERR, .payload.err_code = ERR_FILE_ERROR };
     void* buffer = alloc->alloc(alloc, 1024, 8);
     
-    if (!buffer) { 
+    if (buffer == nullptr) { 
         res.payload.err_code = ERR_OUT_OF_MEMORY; 
         goto defer; 
     }
@@ -353,7 +402,7 @@ Result IO_file(Allocator* alloc, String path) {
     res.payload.val = buffer;
     
 defer:
-    if (res.state == ERR && buffer) {
+    if (res.state == ERR && buffer != nullptr) {
         alloc->free(alloc, buffer, 1024);
     }
     return res;
@@ -362,25 +411,25 @@ defer:
 
 ### Implementation: Explicit Deinit
 
-  - **Verification:** [[1]](test-explicit-deinit)
+  - **Verification:** [[1]](#test-explicit-deinit)
 
-**Description:** Standardized teardown function mapping for resource-owning structs.
+**Description:** Standardized teardown function yielding identical allocations back to generic `Allocator`.
 
 ```c
-void VECTOR_deinit(Vector* vec) {
-    if (vec->data) {
-        vec->alloc->free(vec->alloc, vec->data, vec->cap * vec->stride);
+void DARRAY_deinit(DynamicArray* arr) {
+    if (arr->data != nullptr) {
+        arr->alloc->free(arr->alloc, arr->data, arr->cap * arr->stride);
     }
-    vec->len = 0;
-    vec->cap = 0;
+    arr->len = 0;
+    arr->cap = 0;
 }
 ```
 
 ### Implementation: Files
 
-  - **Verification:** [[1]](test-files)
+  - **Verification:** [[1]](#test-files)
 
-**Description:** I/O subsystem wrapped in the Result architecture.
+**Description:** I/O subsystem wrapped seamlessly within the Result tri-state architecture.
 
 ```c
 Result IO_read(Allocator* alloc, String path);
@@ -389,7 +438,7 @@ Result IO_write(Allocator* alloc, String path, Slice data);
 
 -----
 
-## 5\. Testing and Validation
+## 5. Testing and Validation
 
 ### Test: VTable
 
@@ -415,12 +464,12 @@ assert(arena->offset == 0);
 
 ### Test: Primitives
 
-**Description:** Assert correct static sizing on target architecture.
+**Description:** Assert correct static sizing on target architecture utilizing C23 features.
 
 ```c
-_Static_assert(sizeof(u32) == 4, "u32 must be 4 bytes");
-_Static_assert(sizeof(f32) == 4, "f32 must be 4 bytes");
-_Static_assert(sizeof(b8) == 1, "b8 must be 1 byte");
+static_assert(sizeof(u32) == 4, "u32 must be 4 bytes");
+static_assert(sizeof(f32) == 4, "f32 must be 4 bytes");
+static_assert(sizeof(bool) == 1, "bool must be 1 byte");
 ```
 
 ### Test: Slices
@@ -442,29 +491,40 @@ String s = STRING_new("test", 4);
 assert(s.len == 4);
 ```
 
-### Test: Vector
+### Test: Dynamic Array
 
-**Description:** Assert automatic reallocation scaling correctly moves elements.
+**Description:** Assert scalable heap capacity correctly offsets elements safely via allocation strategies.
 
 ```c
-Vector v = VECTOR_init(alloc, sizeof(u32));
-VECTOR_push(&v, &item);
-assert(v.len == 1);
-VECTOR_deinit(&v);
+DynamicArray arr = DARRAY_init(alloc, sizeof(u32));
+DARRAY_push(&arr, &item);
+assert(arr.len == 1);
+DARRAY_deinit(&arr);
+```
+
+### Test: Doubly Linked List
+
+**Description:** Assert node traversal stability.
+
+```c
+DList list = DLIST_init(alloc);
+DLIST_append(&list, &item);
+assert(list.head == list.tail && list.head != nullptr);
+assert(list.len == 1);
 ```
 
 ### Test: Iterator
 
-**Description:** Assert generic forward traversal interface correctly dispatches to the underlying collection sequentially.
+**Description:** By simplifying typical explicit iteration pattern boilerplate, developers cleanly process generic sequences decoupled from size logic completely.
 
 ```c
-VectorIterator vec_iter;
-VECTOR_ITERATOR_init(&vec_iter, &v);
+DARRAY_Iterator arr_iter;
+DARRAY_ITERATOR_init(&arr_iter, &arr);
 
-Iterator* iter = (Iterator*)&vec_iter;
+Iterator* iter = (Iterator*)&arr_iter;
 void* el;
-while ((el = iter->next(iter)) != NULL) {
-    // Process element generically via vtable dispatch
+while ((el = iter->next(iter)) != nullptr) {
+    // Process element cleanly via dynamically dispatched sequence without manual bounds tracking
 }
 ```
 
@@ -473,14 +533,14 @@ while ((el = iter->next(iter)) != NULL) {
 **Description:** Assert `O(1)` retrieval of values matching specific keys.
 
 ```c
-Table t = TABLE_init(alloc);
+Table t = TABLE_init(alloc, 16);
 TABLE_set(&t, str_key, val);
-assert(TABLE_get(&t, str_key) == val);
+assert(TABLE_get(&t, str_key).payload.val == val);
 ```
 
 ### Test: Result
 
-**Description:** Assert initialization, data insertion, and retrieval through the tri-state return architecture.
+**Description:** Assert strict type separation without implicit collisions or application halting via the tri-state design.
 
 ```c
 Result res_init = TABLE_init(alloc, 16);
@@ -510,12 +570,12 @@ assert(alloc_count == 0);
 
 ### Test: Explicit Deinit
 
-**Description:** Assert the owning struct propagates the correct sizes to the original allocator's `free` function.
+**Description:** Assert the owning struct propagates identical footprints exactly matching its generation logic.
 
 ```c
-Vector v = VECTOR_init(arena_base, sizeof(u8));
-VECTOR_push(&v, &item);
-VECTOR_deinit(&v);
+DynamicArray arr = DARRAY_init(arena_base, sizeof(u8));
+DARRAY_push(&arr, &item);
+DARRAY_deinit(&arr);
 assert(arena_base->freed_bytes == expected_bytes);
 ```
 
@@ -528,7 +588,7 @@ Result r = IO_read(alloc, bad_path);
 assert(r.state == ERR && r.payload.err_code == ERR_FILE_ERROR);
 ```
 
-## 6\. Next Steps and Review
+## 6. Next Steps and Review
 
 The implementation phase will commence after the final review and approval of this design document.
 
