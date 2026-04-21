@@ -25,7 +25,7 @@ To guarantee absolute portability across arbitrary C compilers and environments,
 3.  **Prohibitions & Restrictions:** Runtime-altering extensions, specifically GCC's `__attribute__((cleanup))` for RAII emulation, are forbidden due to lack of support in non-GNU environments.
 
 ## 1\. Problems to be Solved
-git
+
 ### Problem: Allocator agnosticism
 
   - **Statement:** Hardcoding `malloc` and `free` throughout a codebase creates rigid data structures. It prevents developers from swapping out memory strategies for testing, restricted environments, or performance optimization without rewriting the structure's internal logic.
