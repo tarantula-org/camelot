@@ -1,7 +1,7 @@
 # Software Design Document Template
 
 > [!Important]
-> All designs and implementations must strictly adhere to the [Yutila Security Policies](https://docs.google.com/document/d/1zqEZ9wyOiUj6hyH294iyZh9IXi8PnqnQC8UB7tnc0I0/edit?usp=sharing). Verify that your proposal incorporates the core architectural principles (Fail-Safe Defaults, Least Privilege, and Open Design) before submitting for review.
+> All designs and implementations must strictly adhere to the [Yutila Security Policies](https://yutila.com/terms/security). Verify that your proposal incorporates the core architectural principles (Fail-Safe Defaults, Least Privilege, and Open Design) before submitting for review.
 
 ## Constraints
 
@@ -9,22 +9,18 @@
 
 Camelot prioritizes long-term enterprise reliability, cross-platform interoperability, and transaction stability over trendy syntactic sugar. Borrowing the survivability thesis of platforms like the JVM ("Write Once, Run Anywhere"), Camelot's abstractions are engineered to be predictably robust, backward-compatible, and rigorously tested so they can run undisturbed for decades in mission-critical environments.
 
-1.  **Primary Requirement:** All structures and functions must strictly utilize the `NAMESPACE_function` format, where the prefix/namespace is fully uppercase and the action/function suffix is fully lowercase.
-2.  **Secondary Requirement:** Namespace and function components must be connected by an underscore, and full words must be consistently favored to maintain semantic clarity.
+1.  **Primary Requirement:** All structures and functions must strictly utilize the `DOMAIN_functionSubfunction` format, where the domain prefix is fully uppercase, the primary function name is fully lowercase, and any subfunction qualifier appends in camelCase without additional underscores.
+2.  **Secondary Requirement:** Domain and function components are connected by a single underscore. Full words must be consistently favored to maintain semantic clarity.
 3.  **Prohibitions & Restrictions:** Word truncations or casual abbreviations are strictly prohibited unless using universally standard acronyms (e.g., `IO`).
 
 ### Portability & Compiler Extensions
 
 To guarantee absolute portability across arbitrary C compilers and environments, reliance on non-standard runtime compiler extensions is explicitly prohibited.
-1. **[Primary Requirement]:** The codebase must remain compatible with all major C compilers (e.g., MSVC, GCC, Clang).
-2. **[Secondary Requirement]:** Compiler attributes that operate strictly during compilation, such as `[[nodiscard]]`, are acceptable and encouraged.
-3. **[Prohibitions & Restrictions]:** Runtime-altering extensions, specifically GCC's `__attribute__((cleanup))`, are forbidden due to lack of support in non-GNU environments.
-
 1.  **Primary Requirement:** The codebase must remain compatible with all major C compilers (e.g., MSVC, GCC, Clang) by avoiding features that inject or manipulate logic at runtime via compiler-specific extensions.
 2.  **Secondary Requirement:** Compiler attributes that operate strictly during compilation without mutating runtime binaries, such as static analysis hints (e.g., `__attribute__((warn_unused_result))`), are acceptable and encouraged.
 3.  **Prohibitions & Restrictions:** Runtime-altering extensions, specifically GCC's `__attribute__((cleanup))` for RAII emulation, are forbidden due to lack of support in non-GNU environments.
 
-## 1\. Problems to be Solved
+## 2\. Problems to be Solved
 
 ### Problem: Allocator agnosticism
 
@@ -91,9 +87,19 @@ To guarantee absolute portability across arbitrary C compilers and environments,
   - **Statement:** Direct interaction with POSIX or Windows APIs creates platform-specific memory, file descriptor leaks, and inconsistent error codes throughout the core logic of an application.
   - **Solutions:** [[1]](#solution-files)
 
+### Problem: Legacy String Functions
+
+  - **Statement:** Legacy C string functions (`strcpy`, `strcat`, `strncpy`, `strncat`) are the root cause of the majority of buffer overflow CVEs. Their continued use in any translation unit introduces exploitable attack surface that no amount of runtime checking can fully mitigate.
+  - **Solutions:** [[1]](#solution-compiler-function-poisoning)
+
+### Problem: Unsafe String Interop
+
+  - **Statement:** When Camelot `String` values cross into libc boundaries (e.g., file paths for `fopen`), developers resort to `strcpy` or `sprintf`, reintroducing overflow risk. Furthermore, raw `asprintf()` and `vasprintf()` bypass the `Allocator` VTable entirely, violating memory lifetime ownership and creating double-free hazards.
+  - **Solutions:** [[1]](#solution-safe-string-interop)
+
 -----
 
-## 2\. Proposed Solutions
+## 3\. Proposed Solutions
 
 ### Solution: VTable
 
@@ -122,7 +128,7 @@ To guarantee absolute portability across arbitrary C compilers and environments,
 
 ### Solution: Dynamic Array
 
-  - **Statement:** A memory-safe `DynamicArray` interface that manages its buffer lifetime. For its optimal resizing strategy, the array utilizes a mathematically proven 1.5x capacity growth multiplier (calculated efficiently via bitwise right-shift addition `cap = cap + (cap >> 1)`). By growing at exactly 1.5x instead of the industry standard 2.0x, the sum of all previously discarded block allocations will eventually exceed the next requested capacity. Once this threshold is crossed, the host system's memory allocator can immediately coalesce and recycle the older blocks natively, achieving supreme optimal memory reduction without manual tuning.
+  - **Statement:** A memory-safe `Vector` interface that manages its buffer lifetime. For its optimal resizing strategy, the array utilizes a mathematically proven 1.5x capacity growth multiplier (calculated efficiently via bitwise right-shift addition `cap = cap + (cap >> 1)`). By growing at exactly 1.5x instead of the industry standard 2.0x, the sum of all previously discarded block allocations will eventually exceed the next requested capacity. Once this threshold is crossed, the host system's memory allocator can immediately coalesce and recycle the older blocks natively, achieving supreme optimal memory reduction without manual tuning.
   - **Implementations:** [[1]](#implementation-dynamic-array)
 
 ### Solution: Doubly Linked List
@@ -161,9 +167,20 @@ To guarantee absolute portability across arbitrary C compilers and environments,
   - **Statement:** An abstracted translation boundary wrapping POSIX/Windows IO seamlessly into Camelot's Result types to ensure the framework's strict safety rules apply.
   - **Implementations:** [[1]](#implementation-files)
 
+### Solution: Compiler Function Poisoning
+
+  - **Statement:** A core security header (`camelot/safety.h`) that uses `#pragma GCC poison` to transform any reference to banned legacy string functions into a hard compilation error. The directive is wrapped in compiler-detection macros for MSVC compatibility and guarded by `#ifndef ALLOW_UNSAFE` to permit explicit developer opt-out when strictly necessary.
+  - **Implementations:** [[1]](#implementation-compiler-function-poisoning)
+
+### Solution: Safe String Interop
+
+  - **Statement:** Mandate `snprintf()` and `memccpy()` for all libc boundary crossings, with all return values checked for truncation or overrun and routed through the `Result` monad. Raw `asprintf()` and `vasprintf()` are prohibited. Allocator-aware equivalents (`STRING_format`, `STRING_formatVariadic`) return an `OwnedString` type that pairs the string data with its originating `Allocator*`, conforming to the Explicit Deinit pattern and preventing double-frees.
+  - **Trade-offs:** The `OwnedString` wrapper introduces one additional pointer of overhead compared to a bare `String` slice.
+  - **Implementations:** [[1]](#implementation-safe-string-interop)
+
 -----
 
-## 3\. Implementation Details
+## 4\. Implementation Details
 
 ### Implementation: VTable
 
@@ -174,7 +191,7 @@ To guarantee absolute portability across arbitrary C compilers and environments,
 ```c
 typedef struct Allocator Allocator;
 struct Allocator {
-    void* (*alloc)(Allocator* self, size_t size, size_t align);
+    void* (*allocate)(Allocator* self, size_t size, size_t align);
     void  (*free)(Allocator* self, void* ptr, size_t size);
 };
 ```
@@ -193,7 +210,7 @@ typedef struct {
     size_t offset;
 } Arena;
 
-void* ARENA_alloc(Allocator* self, size_t size, size_t align);
+void* ARENA_allocate(Allocator* self, size_t size, size_t align);
 void ARENA_reset(Arena* self);
 ```
 
@@ -259,10 +276,10 @@ typedef struct {
     size_t len;
     size_t cap;
     size_t stride;
-} DynamicArray;
+} Vector;
 
-DynamicArray DARRAY_init(Allocator* alloc, size_t stride);
-void DARRAY_push(DynamicArray* arr, const void* item);
+Vector VECTOR_init(Allocator* alloc, size_t stride);
+void VECTOR_push(Vector* arr, const void* item);
 ```
 
 ### Implementation: Doubly Linked List
@@ -302,14 +319,14 @@ struct Iterator {
     void* (*next)(Iterator* self);
 };
 
-// Example concrete implementation wrapping a DynamicArray
+// Example concrete implementation wrapping a Vector
 typedef struct {
     Iterator base;
-    DynamicArray* arr;
+    Vector* arr;
     size_t index;
-} DARRAY_Iterator;
+} VECTOR_Iterator;
 
-void DARRAY_ITERATOR_init(DARRAY_Iterator* self, DynamicArray* arr);
+void VECTOR_ITERATOR_init(VECTOR_Iterator* self, Vector* arr);
 ```
 
 ### Implementation: Table
@@ -360,7 +377,7 @@ typedef enum {
 typedef struct [[nodiscard]] {
     State state;
     union {
-        void* val;
+        void* val;        // Universal success payload (e.g., OwnedString*, Table*, etc.)
         u32 err_code;
     } payload;
 } Result;
@@ -375,7 +392,7 @@ typedef struct [[nodiscard]] {
 ```c
 Result IO_file(Allocator* alloc, String path) {
     Result res = { .state = ERR, .payload.err_code = ERR_FILE_ERROR };
-    void* buffer = alloc->alloc(alloc, 1024, 8);
+    void* buffer = alloc->allocate(alloc, 1024, 8);
     
     if (buffer == nullptr) { 
         res.payload.err_code = ERR_OUT_OF_MEMORY; 
@@ -400,7 +417,7 @@ defer:
 **Description:** Standardized teardown function yielding identical allocations back to generic `Allocator`.
 
 ```c
-void DARRAY_deinit(DynamicArray* arr) {
+void VECTOR_deinit(Vector* arr) {
     if (arr->data != nullptr) {
         arr->alloc->free(arr->alloc, arr->data, arr->cap * arr->stride);
     }
@@ -420,9 +437,55 @@ Result IO_read(Allocator* alloc, String path);
 Result IO_write(Allocator* alloc, String path, Slice data);
 ```
 
+### Implementation: Compiler Function Poisoning
+
+  - **Verification:** [[1]](#test-compiler-function-poisoning)
+
+**Description:** Compile-time header that statically bans legacy vulnerable C string functions via pragma poisoning, with compiler portability guards and an explicit opt-out mechanism.
+
+```c
+// camelot/safety.h — Compile-time function banning
+#ifndef CAMELOT_SAFETY_H
+#define CAMELOT_SAFETY_H
+
+#ifndef ALLOW_UNSAFE
+  #if defined(__GNUC__) || defined(__clang__)
+    #pragma GCC poison strcpy strcat strncpy strncat
+  #elif defined(_MSC_VER)
+    // MSVC: no #pragma poison equivalent.
+    // Enforcement delegated to /W4 + static analysis (SAL annotations).
+  #endif
+#endif // ALLOW_UNSAFE
+
+#endif // CAMELOT_SAFETY_H
+```
+
+### Implementation: Safe String Interop
+
+  - **Verification:** [[1]](#test-safe-string-interop)
+
+**Description:** Allocator-aware formatted string construction returning an owning type that pairs the allocated data with its originating `Allocator*`, preserving Explicit Deinit compliance. The `OwnedString` type resolves the lifecycle conflict where a bare `String` (which is a non-owning `Slice`) cannot track its allocator for deallocation.
+
+```c
+// Owning string that pairs allocated data with its Allocator for Explicit Deinit compliance.
+// Unlike String (a non-owning Slice), OwnedString tracks its allocator for safe teardown.
+typedef struct {
+    Allocator* alloc;
+    String view;
+} OwnedString;
+
+// Allocator-aware formatted string construction.
+// Returns Result: OK with OwnedString* payload, or ERR on allocation/format failure.
+[[nodiscard]] Result STRING_format(Allocator* alloc, const char* fmt, ...);
+[[nodiscard]] Result STRING_formatVariadic(Allocator* alloc, const char* fmt, va_list args);
+
+// Standardized teardown returning memory to the originating Allocator.
+void OWNEDSTRING_deinit(OwnedString* str);
+```
+
 -----
 
-## 4\. Testing and Validation
+## 5\. Testing and Validation
 
 ### Test: VTable
 
@@ -431,7 +494,7 @@ Result IO_write(Allocator* alloc, String path, Slice data);
 ```c
 Allocator* heap = ALLOCATOR_heap();
 Allocator* arena = ALLOCATOR_arena(1024);
-assert(heap->alloc != arena->alloc);
+assert(heap->allocate != arena->allocate);
 ```
 
 ### Test: Arena
@@ -439,8 +502,8 @@ assert(heap->alloc != arena->alloc);
 **Description:** Verify allocation bounds and monotonic increments; assert `reset` clears state instantly.
 
 ```c
-void* ptr1 = ARENA_alloc(arena, 16, 8);
-void* ptr2 = ARENA_alloc(arena, 16, 8);
+void* ptr1 = ARENA_allocate(arena, 16, 8);
+void* ptr2 = ARENA_allocate(arena, 16, 8);
 assert(ptr2 == (u8*)ptr1 + 16);
 ARENA_reset(arena);
 assert(arena->offset == 0);
@@ -480,10 +543,10 @@ assert(s.len == 4);
 **Description:** Assert scalable heap capacity correctly offsets elements safely via allocation strategies.
 
 ```c
-DynamicArray arr = DARRAY_init(alloc, sizeof(u32));
-DARRAY_push(&arr, &item);
+Vector arr = VECTOR_init(alloc, sizeof(u32));
+VECTOR_push(&arr, &item);
 assert(arr.len == 1);
-DARRAY_deinit(&arr);
+VECTOR_deinit(&arr);
 ```
 
 ### Test: Doubly Linked List
@@ -502,8 +565,8 @@ assert(list.len == 1);
 **Description:** By simplifying typical explicit iteration pattern boilerplate, developers cleanly process generic sequences decoupled from size logic completely.
 
 ```c
-DARRAY_Iterator arr_iter;
-DARRAY_ITERATOR_init(&arr_iter, &arr);
+VECTOR_Iterator arr_iter;
+VECTOR_ITERATOR_init(&arr_iter, &arr);
 
 Iterator* iter = (Iterator*)&arr_iter;
 void* el;
@@ -557,9 +620,9 @@ assert(alloc_count == 0);
 **Description:** Assert the owning struct propagates identical footprints exactly matching its generation logic.
 
 ```c
-DynamicArray arr = DARRAY_init(arena_base, sizeof(u8));
-DARRAY_push(&arr, &item);
-DARRAY_deinit(&arr);
+Vector arr = VECTOR_init(arena_base, sizeof(u8));
+VECTOR_push(&arr, &item);
+VECTOR_deinit(&arr);
 assert(arena_base->freed_bytes == expected_bytes);
 ```
 
@@ -572,7 +635,92 @@ Result r = IO_read(alloc, bad_path);
 assert(r.state == ERR && r.payload.err_code == ERR_FILE_ERROR);
 ```
 
-## 5\. Next Steps and Review
+### Test: Compiler Function Poisoning
+
+**Description:** Negative compilation test. Including `safety.h` and referencing any banned function must cause a hard compilation failure when `ALLOW_UNSAFE` is not defined.
+
+```c
+// This translation unit must FAIL to compile.
+#include "camelot/safety.h"
+
+void test_poison(void) {
+    char buf[16];
+    strcpy(buf, "exploit"); // Expected: compilation error (poisoned identifier)
+}
+```
+
+### Test: Safe String Interop
+
+**Description:** Assert `STRING_format` allocates through the provided allocator, returns `ERR` on allocation failure, and `OWNEDSTRING_deinit` properly frees via the stored allocator.
+
+```c
+Result res = STRING_format(alloc, "value: %d", 42);
+assert(res.state == OK);
+OwnedString* owned = res.payload.val;
+assert(owned->view.len == 9);
+OWNEDSTRING_deinit(owned);
+
+// Verify ERR on null allocator failure
+Result fail = STRING_format(failing_alloc, "test");
+assert(fail.state == ERR && fail.payload.err_code == ERR_OUT_OF_MEMORY);
+```
+
+## 6\. Build System (Makefile)
+
+The following compilation and linker flags are mandatory for all Camelot builds. All flags are GCC/Clang-centric; MSVC equivalents (`/GS`, `/DYNAMICBASE`, `/NXCOMPAT`, `/fsanitize=address`) will be documented when MSVC native builds are formalized.
+
+### Exploit Mitigation (All Builds)
+
+**Description:** Baseline hardening flags injected into every compilation target regardless of build profile.
+
+| Flag | Stage | Purpose |
+|---|---|---|
+| `-fPIE` | Compile | ASLR — Position-Independent Executable code generation |
+| `-pie` | Link | ASLR — Link as Position-Independent Executable |
+| `-Wl,-z,noexecstack` | Link | Mark stack memory as non-executable (NX bit) |
+| `-fstack-protector-strong` | Compile | Stack canary instrumentation for functions with local arrays or address-taken variables |
+| `-D_FORTIFY_SOURCE=2` | Compile | Automated bounds checking for `memcpy`, `snprintf`, etc. (requires `-O2` or higher) |
+
+```makefile
+CFLAGS_HARDEN  := -fPIE -fstack-protector-strong -D_FORTIFY_SOURCE=2
+LDFLAGS_HARDEN := -pie -Wl,-z,noexecstack
+```
+
+### Undefined Behavior Sanitization (Debug/Test Builds)
+
+**Description:** Runtime sanitizer instrumentation for catching memory errors and undefined behavior during development and CI.
+
+| Flag | Purpose |
+|---|---|
+| `-fsanitize=address,undefined,signed-overflow` | ASan + UBSan runtime instrumentation |
+| `-ftrapv` | Trap (abort) on signed integer overflow |
+
+> [!IMPORTANT]
+> `-ftrapv` and `-fwrapv` are mutually exclusive. `-ftrapv` (trap/abort) is strictly Debug/Test only.
+
+```makefile
+CFLAGS_DEBUG   := -O0 -g -fsanitize=address,undefined,signed-overflow -ftrapv
+LDFLAGS_DEBUG  := -fsanitize=address,undefined,signed-overflow
+```
+
+### Undefined Behavior Mitigation (Release Builds)
+
+**Description:** Force compiler guarantees on officially undefined behaviors to reduce the blast radius of programmer mistakes in production.
+
+| Flag | Purpose |
+|---|---|
+| `-fwrapv` | Define signed integer overflow as two's complement wrapping |
+| `-fno-delete-null-pointer-checks` | Preserve null-pointer dereference checks; prevent compiler from optimizing them away |
+| `-fno-strict-overflow` | Prevent optimizations that rely on signed overflow being undefined |
+
+> [!IMPORTANT]
+> `-fwrapv` (defined wrap) is strictly Release only. It replaces `-ftrapv` from the Debug profile.
+
+```makefile
+CFLAGS_RELEASE := -O2 -fwrapv -fno-delete-null-pointer-checks -fno-strict-overflow
+```
+
+## 7\. Next Steps and Review
 
 The implementation phase will commence after the final review and approval of this design document.
 
