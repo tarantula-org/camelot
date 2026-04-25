@@ -9,7 +9,7 @@
 
 Camelot prioritizes long-term enterprise reliability, cross-platform interoperability, and transaction stability over trendy syntactic sugar. Borrowing the survivability thesis of platforms like the JVM ("Write Once, Run Anywhere"), Camelot's abstractions are engineered to be predictably robust, backward-compatible, and rigorously tested so they can run undisturbed for decades in mission-critical environments.
 
-1.  **Primary Requirement:** All structures and functions must strictly utilize the `DOMAIN_functionSubfunction` format, where the domain prefix is fully uppercase, the primary function name is fully lowercase, and any subfunction qualifier appends in camelCase without additional underscores.
+1.  **Primary Requirement:** All functions must strictly utilize the `DOMAIN_functionSubfunction` format, where the domain prefix is fully uppercase, the primary function name is fully lowercase, and any subfunction qualifier appends in camelCase without additional underscores.
 2.  **Secondary Requirement:** Domain and function components are connected by a single underscore. Full words must be consistently favored to maintain semantic clarity.
 3.  **Prohibitions & Restrictions:** Word truncations or casual abbreviations are strictly prohibited unless using universally standard acronyms (e.g., `IO`).
 
@@ -40,12 +40,12 @@ To guarantee absolute portability across arbitrary C compilers and environments,
 ### Problem: Slices
 
   - **Statement:** Standard C arrays decay into raw pointers when passed across function boundaries, dropping length metadata. This forces length arguments and reliance on unsafe assumptions. 
-  - **Solutions:** [[1]](#solution-slices)
+  - **Solutions:** [[1]](#solution-slice)
 
 ### Problem: Strings
 
   - **Statement:** Null-terminated strings in C require `O(N)` traversal just to determine their length and are the root cause of most buffer overflow vulnerabilities.
-  - **Solutions:** [[1]](#solution-strings)
+  - **Solutions:** [[1]](#solution-string)
 
 ### Problem: Dynamic Array
 
@@ -101,7 +101,7 @@ To guarantee absolute portability across arbitrary C compilers and environments,
 
 ## 3\. Proposed Solutions
 
-### Solution: VTable
+#### Solution: VTable
 
   - **Statement:** A VTable interface that abstracts memory requests. It allows any Camelot data structure to be instantiated with a heap allocator, a local arena, or a stack buffer, remaining completely agnostic to where the memory actually comes from.
   - **Implementations:** [[1]](#implementation-vtable)
@@ -133,7 +133,7 @@ To guarantee absolute portability across arbitrary C compilers and environments,
 
 ### Solution: Doubly Linked List
 
-  - **Statement:** A bidirectional pointer-based chain structured as a `DList` with dedicated `DLIST_Node` components. It strictly guarantees hardware pointer stability (nodes never move during list modification) and maintains robust, O(1) insertion scaling across any midpoint.
+  - **Statement:** A bidirectional pointer-based chain structured as a `LIST` with dedicated `LIST_Node` components. It strictly guarantees hardware pointer stability (nodes never move during list modification) and maintains robust, O(1) insertion scaling across any midpoint.
   - **Implementations:** [[1]](#implementation-doubly-linked-list)
 
 ### Solution: Iterator
@@ -289,22 +289,22 @@ void VECTOR_push(Vector* arr, const void* item);
 **Description:** Segregated explicitly named structure node chain mapping strictly identical hardware pointers.
 
 ```c
-typedef struct DLIST_Node DLIST_Node;
-struct DLIST_Node {
-    DLIST_Node* next;
-    DLIST_Node* prev;
+typedef struct LIST_Node LIST_Node;
+struct LIST_Node {
+    LIST_Node* next;
+    LIST_Node* prev;
     void* value;
 };
 
 typedef struct {
     Allocator* alloc;
-    DLIST_Node* head;
-    DLIST_Node* tail;
+    LIST_Node* head;
+    LIST_Node* tail;
     size_t len;
-} DList;
+} LIST;
 
-DList DLIST_init(Allocator* alloc);
-void DLIST_append(DList* list, void* value);
+LIST LIST_init(Allocator* alloc);
+void LIST_append(LIST* list, void* value);
 ```
 
 ### Implementation: Iterator
@@ -326,7 +326,7 @@ typedef struct {
     size_t index;
 } VECTOR_Iterator;
 
-void VECTOR_ITERATOR_init(VECTOR_Iterator* self, Vector* arr);
+void VECTOR_iteratorInit(VECTOR_Iterator* self, Vector* arr);
 ```
 
 ### Implementation: Table
@@ -554,8 +554,8 @@ VECTOR_deinit(&arr);
 **Description:** Assert node traversal stability.
 
 ```c
-DList list = DLIST_init(alloc);
-DLIST_append(&list, &item);
+LIST list = LIST_init(alloc);
+LIST_append(&list, &item);
 assert(list.head == list.tail && list.head != nullptr);
 assert(list.len == 1);
 ```
@@ -566,7 +566,7 @@ assert(list.len == 1);
 
 ```c
 VECTOR_Iterator arr_iter;
-VECTOR_ITERATOR_init(&arr_iter, &arr);
+VECTOR_iteratorInit(&arr_iter, &arr);
 
 Iterator* iter = (Iterator*)&arr_iter;
 void* el;
@@ -651,7 +651,7 @@ void test_poison(void) {
 
 ### Test: Safe String Interop
 
-**Description:** Assert `STRING_format` allocates through the provided allocator, returns `ERR` on allocation failure, and `OWNEDSTRING_deinit` properly frees via the stored allocator.
+**Description:** Assert `STRING_format` allocates through the provided Allocator, returns `ERR` on allocation failure, and `OWNEDSTRING_deinit` properly frees via the stored Allocator.
 
 ```c
 Result res = STRING_format(alloc, "value: %d", 42);
@@ -660,7 +660,7 @@ OwnedString* owned = res.payload.val;
 assert(owned->view.len == 9);
 OWNEDSTRING_deinit(owned);
 
-// Verify ERR on null allocator failure
+// Verify ERR on null Allocator failure
 Result fail = STRING_format(failing_alloc, "test");
 assert(fail.state == ERR && fail.payload.err_code == ERR_OUT_OF_MEMORY);
 ```
@@ -720,7 +720,42 @@ LDFLAGS_DEBUG  := -fsanitize=address,undefined,signed-overflow
 CFLAGS_RELEASE := -O2 -fwrapv -fno-delete-null-pointer-checks -fno-strict-overflow
 ```
 
-## 7\. Next Steps and Review
+## 7\. Codebase Structure
+
+Camelot's repository is organized to ensure strict modularity, clear separation between public APIs and private implementations, and simplified build orchestration. This structure follows the "Standard C Library" pattern, optimized for long-term maintenance and cross-platform portability.
+
+### Directory Hierarchy
+
+```text
+camelot/
+├── include/              # Public API Headers (read-only for clients)
+│   └── camelot/          # Unified namespace
+│       ├── core/         # Fundamental abstractions (VTable, Result)
+│       ├── memory/       # Memory management (Arena, Allocator)
+│       ├── io/           # Input/Output subsystems
+│       ├── ds/           # Data Structures (Vector, List, Table)
+│       ├── types/        # Primitives and String logic
+│       └── camelot.h     # Umbrella header for full framework access
+├── src/                  # Private Implementation (.c files)
+│   ├── core/
+│   ├── memory/
+│   ├── io/
+│   ├── ds/
+│   └── types/
+├── tests/                # Unit and Integration Testing suite
+├── docs/                 # Architectural specifications and manuals
+├── Makefile              # Deterministic build automation
+└── README.md             # Project entry point and overview
+```
+
+### Architectural Rationale
+
+1.  **Public/Private Isolation**: By placing headers in `include/camelot/`, the build system ensures that only intended APIs are accessible via `#include <camelot/subsystem.h>`. Private headers or internal helper macros remain strictly within the `src/` hierarchy.
+2.  **Namespace Mirroring**: The directory structure of `src/` mirrors `include/` exactly. This predictably maps implementation files to their corresponding headers, reducing cognitive load for developers.
+3.  **Modular Compilation**: Every module (e.g., `ds/vector.c`) is designed to compile into an independent object file. This enables the linker to prune unused modules in static builds, reducing the final binary footprint for restricted environments.
+4.  **Flat Namespace**: To prevent header collision in large enterprise projects, all Camelot headers must be accessed through the `camelot/` prefix.
+
+## 8\. Next Steps and Review
 
 The implementation phase will commence after the final review and approval of this design document.
 
